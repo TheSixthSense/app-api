@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!--
+        [ root 로그 레벨 설정 ]
+        - root 로그 레벨을 설정한다.
+    -->
+    <root level="INFO">
+
+    </root>
+    <logger name="org.springframework.transaction" level="INFO"/>
+
+</configuration>
