@@ -52,6 +52,7 @@ public class UserService {
 
         // save user
         userRepository.save(User.builder()
+                .appleId(userRegDTO.getAppleId())
                 .email(email)
                 .userRoleType(userRegDTO.getUserRoleType())
                 .build());

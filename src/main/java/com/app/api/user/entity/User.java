@@ -20,6 +20,9 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String appleId;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column
