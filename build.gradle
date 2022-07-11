@@ -37,9 +37,6 @@ dependencies {
 	// swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
-	// bcrypt
-	implementation group: 'org.mindrot.bcrypt', name: 'bcrypt', version: '0.3'
-
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
