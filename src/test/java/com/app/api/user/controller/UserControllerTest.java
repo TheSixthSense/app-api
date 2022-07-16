@@ -1,7 +1,7 @@
 package com.app.api.user.controller;
 
-import com.app.api.config.BaseMvcTest;
+import com.app.api.config.BaseTest;
 
-class UserControllerTest extends BaseMvcTest {
+class UserControllerTest extends BaseTest {
 
 }
