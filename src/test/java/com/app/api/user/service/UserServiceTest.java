@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UserServiceTest extends BaseTest {
-
 @DisplayName("회원가입 테스트")
 class UserServiceTest extends BaseTest {
 
