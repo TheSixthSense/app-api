@@ -42,41 +42,57 @@ public class UserService {
         // check email form
         checkEmailForm(email);
 
-        // 기존 회원가입 여부 확인
-        userRepository.findByEmail(email)
-                .ifPresent(user -> {
-                    throw BizException
-                            .withUserMessageKey("exception.user.already.exist")
-                            .build();
-                });
+        // check duplicated nickName
+        checkDuplicateNickname(userRegDTO.getNickName());
+
+        // 기존 회원가입 여부 확인 - email을 기준
+        userRepository.findByEmail(email).ifPresent(user -> {
+            throw BizException.withUserMessageKey("exception.user.already.exist").build();
+        });
 
         // save user
         userRepository.save(User.builder()
                 .appleId(userRegDTO.getAppleId())
                 .email(email)
+                .nickName(userRegDTO.getNickName())
+                .gender(userRegDTO.getGender())
+                .birthDay(userRegDTO.getBirthDay())
+                .vegannerStage(userRegDTO.getVegannerStage())
                 .userRoleType(userRegDTO.getUserRoleType())
                 .build());
     }
 
-    /** 어드민 권한 생성불가(관리자에게 문의) */
+    /**
+     * 닉네임 중복여부 확인
+     */
+    public void checkDuplicateNickname(String nickName) {
+        userRepository.findByNickName(nickName).ifPresent(user -> {
+            throw BizException.withUserMessageKey("exception.user.nickName.already.exist").build();
+        });
+    }
+
+    /**
+     * 어드민 권한 생성불가(관리자에게 문의)
+     */
     private void checkUserRoleType(UserRegDTO userRegDTO) {
         if (userRegDTO.getUserRoleType() == null) {
-            throw BizException
-                    .withUserMessageKey("exception.user.role.type.null")
-                    .build();
+            throw BizException.withUserMessageKey("exception.user.role.type.null").build();
         }
 
         if (userRegDTO.getUserRoleType() == UserRoleType.ADMIN) {
-            throw BizException
-                    .withUserMessageKey("exception.user.create.admin.role")
-                    .build();
+            throw BizException.withUserMessageKey("exception.user.create.admin.role").build();
         }
     }
 
-    /** Apple Secret Token 에서 email 정보 추출 */
+    /**
+     * Apple Secret Token 에서 email 정보 추출
+     */
     @SuppressWarnings("unchecked")
     private String getEmailFromAppleSecretToken(String secretToken) {
         String[] chunks = secretToken.split("\\.");
+
+        if (chunks.length <= 1)
+            throw BizException.withUserMessageKey("exception.user.client.secret.is.not.jwtToken").build();
 
         // payload base64 decode
         Base64.Decoder decoder = Base64.getUrlDecoder();
@@ -85,17 +101,19 @@ public class UserService {
         // payload to json
         Gson gson = new Gson();
         Map<String, Object> payloadMap = gson.fromJson(payload, Map.class);
+        if (payloadMap.get("email") == null)
+            throw BizException.withUserMessageKey("exception.user.client.secret.is.not.contain.email").build();
 
         return payloadMap.get("email").toString();
     }
 
-    /** 이메일 형식 체크 */
+    /**
+     * 이메일 형식 체크
+     */
     private void checkEmailForm(String email) {
         Matcher m = EMAIL.matcher(email);
-        if(!m.matches()) {
-            throw BizException
-                    .withUserMessageKey("exception.common.email.form")
-                    .build();
+        if (!m.matches()) {
+            throw BizException.withUserMessageKey("exception.common.email.form").build();
         }
     }
 }
