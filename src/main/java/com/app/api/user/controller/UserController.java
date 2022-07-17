@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "사용자")
 @RestController
@@ -30,6 +28,19 @@ public class UserController {
         userService.signup(userRegDTO);
         return RestResponse
                 .withUserMessageKey("success.user.create")
+                .build();
+    }
+
+    @ApiOperation(value = "닉네임 중복확인")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "동일한 닉네임이 없습니다."),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "해당 닉네임은 이미 존재합니다. 다른 닉네임을 사용하여 주세요.")
+    })
+    @GetMapping("/check/nick-name")
+    public RestResponse<Object> checkDuplicateNickName(@RequestParam(name = "nickName") String nickName) {
+        userService.checkDuplicateNickname(nickName);
+        return RestResponse
+                .withUserMessageKey("success.user.nickname.unique")
                 .build();
     }
 

@@ -1,7 +1,9 @@
 package com.app.api.user.entity;
 
 import com.app.api.common.entity.BaseTimeEntity;
+import com.app.api.user.enums.Gender;
 import com.app.api.user.enums.UserRoleType;
+import com.app.api.user.enums.VegannerStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,8 +27,19 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String nickName;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(nullable = false)
+    private String birthDay;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VegannerStage vegannerStage;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
