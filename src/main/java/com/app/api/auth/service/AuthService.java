@@ -34,17 +34,10 @@ public class AuthService {
      * 로그인
      */
     public AuthTokenDTO login(AuthLoginDTO authLoginDTO) throws JsonProcessingException {
-        User user;
-        if (authLoginDTO.getAppleId() != null) {
-            user = userRepository.findByAppleId(authLoginDTO.getAppleId())
-                    .orElseThrow(() -> BizException.
-                            withUserMessageKey("exception.auth.appleId.not.found")
-                            .build());
-        } else {
-            throw BizException.
-                    withUserMessageKey("exception.auth")
-                    .build();
-        }
+        User user = userRepository.findByAppleId(authLoginDTO.getAppleId())
+                .orElseThrow(() -> BizException.
+                        withUserMessageKey("exception.auth.appleId.not.found")
+                        .build());
 
         Long userId = user.getId();
 
