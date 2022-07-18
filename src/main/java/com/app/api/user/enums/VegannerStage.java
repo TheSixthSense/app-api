@@ -10,6 +10,6 @@ public enum VegannerStage {
     /** SENIOR */
     SENIOR,
 
-    /** EXPERT */
-    EXPERT,
+    /** RETRY */
+    RETRY,
 }
