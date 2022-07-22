@@ -37,7 +37,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO = new UserRegDTO();
             userRegDTO.setAppleId("OOOOOOOO");
             userRegDTO.setClientSecret("eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw");
-            userRegDTO.setGender(Gender.MEN);
+            userRegDTO.setGender(Gender.MALE);
             userRegDTO.setBirthDay("19920910");
             userRegDTO.setUserRoleType(UserRoleType.USER);
             userRegDTO.setNickName("testNickName");
@@ -55,7 +55,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO = new UserRegDTO();
             userRegDTO.setAppleId("OOOOOOOO");
             userRegDTO.setClientSecret("sss");
-            userRegDTO.setGender(Gender.MEN);
+            userRegDTO.setGender(Gender.MALE);
             userRegDTO.setBirthDay("19920910");
             userRegDTO.setUserRoleType(UserRoleType.USER);
             userRegDTO.setNickName("testNickName");
@@ -74,7 +74,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO = new UserRegDTO();
             userRegDTO.setAppleId("OOOOOOOO");
             userRegDTO.setClientSecret("eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw");
-            userRegDTO.setGender(Gender.MEN);
+            userRegDTO.setGender(Gender.MALE);
             userRegDTO.setBirthDay("19920910");
             userRegDTO.setUserRoleType(UserRoleType.ADMIN);
             userRegDTO.setNickName("testNickName");
@@ -93,7 +93,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO1 = new UserRegDTO();
             userRegDTO1.setAppleId("OOOOOOOO");
             userRegDTO1.setClientSecret("eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw");
-            userRegDTO1.setGender(Gender.MEN);
+            userRegDTO1.setGender(Gender.MALE);
             userRegDTO1.setBirthDay("19920910");
             userRegDTO1.setUserRoleType(UserRoleType.USER);
             userRegDTO1.setNickName("testNickName1");
@@ -102,7 +102,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO2 = new UserRegDTO();
             userRegDTO2.setAppleId("OOOOOOO1");
             userRegDTO2.setClientSecret("eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw");
-            userRegDTO2.setGender(Gender.MEN);
+            userRegDTO2.setGender(Gender.MALE);
             userRegDTO2.setBirthDay("19920910");
             userRegDTO2.setUserRoleType(UserRoleType.USER);
             userRegDTO2.setNickName("testNickName2");
@@ -124,7 +124,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO1 = new UserRegDTO();
             userRegDTO1.setAppleId("OOOOOOOO");
             userRegDTO1.setClientSecret("eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw");
-            userRegDTO1.setGender(Gender.MEN);
+            userRegDTO1.setGender(Gender.MALE);
             userRegDTO1.setBirthDay("19920910");
             userRegDTO1.setUserRoleType(UserRoleType.USER);
             userRegDTO1.setNickName("testNickName");
@@ -133,7 +133,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO2 = new UserRegDTO();
             userRegDTO2.setAppleId("OOOOOOO1");
             userRegDTO2.setClientSecret("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJ0ZXN0QGdvb2dsZS5jb20iLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ZQ7diVSCBsZpPc5X7Z70mt4yEUGSZm0ctdWlO3tpL30");
-            userRegDTO2.setGender(Gender.MEN);
+            userRegDTO2.setGender(Gender.MALE);
             userRegDTO2.setBirthDay("19920910");
             userRegDTO2.setUserRoleType(UserRoleType.USER);
             userRegDTO2.setNickName("testNickName");
@@ -155,7 +155,7 @@ class UserServiceTest extends BaseTest {
             UserRegDTO userRegDTO = new UserRegDTO();
             userRegDTO.setAppleId("OOOOOOO1");
             userRegDTO.setClientSecret("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-            userRegDTO.setGender(Gender.MEN);
+            userRegDTO.setGender(Gender.MALE);
             userRegDTO.setBirthDay("19920910");
             userRegDTO.setUserRoleType(UserRoleType.USER);
             userRegDTO.setNickName("testNickName");
@@ -179,7 +179,7 @@ class UserServiceTest extends BaseTest {
             userRepository.save(User.builder()
                     .appleId("00000000")
                     .email("test@gmail.com")
-                    .gender(Gender.MEN)
+                    .gender(Gender.MALE)
                     .birthDay("19920910")
                     .userRoleType(UserRoleType.USER)
                     .nickName("testNickName1")
