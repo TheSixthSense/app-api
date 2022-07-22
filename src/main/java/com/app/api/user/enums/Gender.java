@@ -2,7 +2,7 @@ package com.app.api.user.enums;
 
 public enum Gender {
     /** MEN */
-    MEN,
+    MALE,
 
     /** FEMALE */
     FEMALE,
