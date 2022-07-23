@@ -7,6 +7,8 @@ import com.app.api.common.util.Url;
 import com.app.api.core.application.JwtProvider;
 import com.app.api.core.exception.BizException;
 import com.app.api.jwt.dto.TokenDto;
+import com.app.api.jwt.entity.RefreshToken;
+import com.app.api.jwt.repository.RefreshTokenRepository;
 import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +40,12 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
 
+    private final RefreshTokenRepository refreshTokenRepository;
+
     /**
      * 로그인
      */
+    @Transactional
     public AuthTokenDTO login(AuthLoginDTO authLoginDTO) throws JsonProcessingException {
         User user = userRepository.findByAppleId(authLoginDTO.getAppleId())
                 .orElseThrow(() -> BizException.
@@ -49,6 +58,17 @@ public class AuthService {
 
         String accessToken = jwtProvider.createAccessToken(tokenDto);
         String refreshToken = jwtProvider.createRefreshToken(tokenDto);
+        LocalDateTime expireTime = jwtProvider.getExpireTime(refreshToken);
+
+        refreshTokenRepository.findByUserId(user.getId())
+                .ifPresentOrElse(
+                        tokenInfo -> tokenInfo.updateRefreshToken(refreshToken, expireTime),
+                        () -> refreshTokenRepository.save(RefreshToken.builder()
+                                .userId(user.getId())
+                                .refreshToken(refreshToken)
+                                .expiredTime(expireTime)
+                                .build())
+                );
 
         return AuthTokenDTO.builder()
                 .accessToken(accessToken)
