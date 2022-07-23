@@ -18,7 +18,7 @@ import javax.validation.constraints.Pattern;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class UserRegDTO {
 
-    @ApiModelProperty(value = "Apple 계정 정보", example = "OOOOOOOO", required = true)
+    @ApiModelProperty(value = "Apple 계정 정보", example = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512", required = true)
     @NotEmpty
     private String appleId;
 

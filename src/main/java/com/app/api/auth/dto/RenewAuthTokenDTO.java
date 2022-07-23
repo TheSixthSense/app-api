@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class RenewAuthTokenDTO {
 
-    @ApiModelProperty(value = "appleId", example = "OOOOOOOO")
+    @ApiModelProperty(value = "appleId", example = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512")
     @NotBlank
     private String appleId;
 
