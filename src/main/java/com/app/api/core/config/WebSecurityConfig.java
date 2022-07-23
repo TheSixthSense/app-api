@@ -22,10 +22,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // TODO 401 처리
         http.headers().frameOptions().disable();
         http
                 .csrf().disable()
+                .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -36,6 +36,8 @@ public class WebSecurityConfig {
                                 "/auth/login",
                                 "/check/nick-name"
                         ).permitAll()
+                        .antMatchers("/user/**").hasRole("USER")
+                        .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
