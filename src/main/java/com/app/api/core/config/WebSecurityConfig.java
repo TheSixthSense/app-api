@@ -31,7 +31,11 @@ public class WebSecurityConfig {
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .antMatchers("/**").permitAll()
+                        .antMatchers(
+                                "/signup",
+                                "/auth/login",
+                                "/check/nick-name"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
