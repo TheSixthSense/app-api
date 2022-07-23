@@ -5,15 +5,14 @@ import com.app.api.user.dto.UserRegDTO;
 import com.app.api.user.entity.User;
 import com.app.api.user.enums.UserRoleType;
 import com.app.api.user.repository.UserRepository;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Base64;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.app.api.common.util.jwt.JwtUtil.getEmailFromAppleSecretToken;
 
 @Service
 @RequiredArgsConstructor
@@ -84,28 +83,7 @@ public class UserService {
         }
     }
 
-    /**
-     * Apple Secret Token 에서 email 정보 추출
-     */
-    @SuppressWarnings("unchecked")
-    private String getEmailFromAppleSecretToken(String secretToken) {
-        String[] chunks = secretToken.split("\\.");
 
-        if (chunks.length <= 1)
-            throw BizException.withUserMessageKey("exception.user.client.secret.is.not.jwtToken").build();
-
-        // payload base64 decode
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-
-        // payload to json
-        Gson gson = new Gson();
-        Map<String, Object> payloadMap = gson.fromJson(payload, Map.class);
-        if (payloadMap.get("email") == null)
-            throw BizException.withUserMessageKey("exception.user.client.secret.is.not.contain.email").build();
-
-        return payloadMap.get("email").toString();
-    }
 
     /**
      * 이메일 형식 체크
