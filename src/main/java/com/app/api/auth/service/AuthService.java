@@ -13,6 +13,7 @@ import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -24,6 +25,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,19 +54,18 @@ public class AuthService {
                         withUserMessageKey("exception.auth.appleId.not.found")
                         .build());
 
-        TokenDto tokenDto = TokenDto.builder()
-                .userId(user.getId())
-                .build();
+        Long userId = user.getId();
+        TokenDto tokenDto = new TokenDto(userId);
 
         String accessToken = jwtProvider.createAccessToken(tokenDto);
         String refreshToken = jwtProvider.createRefreshToken(tokenDto);
         LocalDateTime expireTime = jwtProvider.getExpireTime(refreshToken);
 
-        refreshTokenRepository.findByUserId(user.getId())
+        refreshTokenRepository.findByUserId(userId)
                 .ifPresentOrElse(
                         tokenInfo -> tokenInfo.updateRefreshToken(refreshToken, expireTime),
                         () -> refreshTokenRepository.save(RefreshToken.builder()
-                                .userId(user.getId())
+                                .userId(userId)
                                 .refreshToken(refreshToken)
                                 .expiredTime(expireTime)
                                 .build())
@@ -83,27 +84,29 @@ public class AuthService {
         User user = userRepository.findByAppleId(renewAuthTokenDTO.getAppleId())
                 .orElseThrow(() -> BizException.withUserMessageKey("exception.user.not.found").build());
 
-        // url
-        String securityUrl = UriComponentsBuilder
-                .fromHttpUrl(Url.appSecurity + "/auth/refresh")
-                .build()
-                .toUriString();
+        Long userId = user.getId();
+        String refreshToken = renewAuthTokenDTO.getRefreshToken();
 
-        // headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        // validation Token
+        jwtProvider.validateToken(refreshToken);
 
-        // Request Body
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put("userId", user.getId());
-        requestData.put("refreshToken", renewAuthTokenDTO.getRefreshToken());
-        String body = objectMapper.writeValueAsString(requestData);
+        // validation Claims
+        Claims claims = jwtProvider.parseClaims(refreshToken);
+        jwtProvider.validateClaims(claims);
 
-        // request
-        HttpEntity<String> request = new HttpEntity<>(body, headers);
-        ResponseEntity<String> resp = restTemplate.exchange(securityUrl, HttpMethod.POST, request, String.class);
+        if (claims.getExpiration().before(new Date())) {
+            throw BizException.withUserMessageKey("exception.jwt.token.expire").build();
+        }
 
-        // convert data
-        return objectMapper.readValue(resp.getBody(), AuthTokenDTO.class);
+        refreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken)
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.jwt.token.refresh.invalid").build());
+
+        // 토큰 생성
+        String accessToken = jwtProvider.createAccessToken(new TokenDto(userId));
+
+        return AuthTokenDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

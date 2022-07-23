@@ -95,7 +95,7 @@ public class JwtProvider {
         }
         if (Objects.isNull(claims.get("role"))) {
             log.error("[JWT Token Filter Error]: User Not Found. Please check header.");
-            throw BizException.withUserMessageKey("exception.jwt.token.claims.invalid").build();
+            throw BizException.withUserMessageKey("exception.jwt.token.claims.role.invalid").build();
         }
     }
 
