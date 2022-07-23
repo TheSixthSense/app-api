@@ -3,7 +3,6 @@ package com.app.api.auth.service;
 import com.app.api.auth.dto.AuthLoginDTO;
 import com.app.api.auth.dto.AuthTokenDTO;
 import com.app.api.auth.dto.RenewAuthTokenDTO;
-import com.app.api.common.util.Url;
 import com.app.api.core.application.JwtProvider;
 import com.app.api.core.exception.BizException;
 import com.app.api.jwt.dto.TokenDto;
@@ -12,22 +11,14 @@ import com.app.api.jwt.repository.RefreshTokenRepository;
 import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -35,10 +26,6 @@ import java.util.Map;
 public class AuthService {
 
     private final UserRepository userRepository;
-
-    private final RestTemplate restTemplate;
-
-    private final ObjectMapper objectMapper;
 
     private final JwtProvider jwtProvider;
 
@@ -48,7 +35,7 @@ public class AuthService {
      * 로그인
      */
     @Transactional
-    public AuthTokenDTO login(AuthLoginDTO authLoginDTO) throws JsonProcessingException {
+    public AuthTokenDTO login(AuthLoginDTO authLoginDTO) {
         User user = userRepository.findByAppleId(authLoginDTO.getAppleId())
                 .orElseThrow(() -> BizException.
                         withUserMessageKey("exception.auth.appleId.not.found")
@@ -80,7 +67,7 @@ public class AuthService {
     /**
      * refreshToken 정보를 기반으로 accessToken 재생성
      */
-    public AuthTokenDTO renewAccessToken(RenewAuthTokenDTO renewAuthTokenDTO) throws JsonProcessingException {
+    public AuthTokenDTO renewAccessToken(RenewAuthTokenDTO renewAuthTokenDTO) {
         User user = userRepository.findByAppleId(renewAuthTokenDTO.getAppleId())
                 .orElseThrow(() -> BizException.withUserMessageKey("exception.user.not.found").build());
 

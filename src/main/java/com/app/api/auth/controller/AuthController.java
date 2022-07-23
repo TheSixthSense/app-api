@@ -30,7 +30,7 @@ public class AuthController {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "로그인 실패")
     })
     @PostMapping("/auth/login")
-    public RestResponse<AuthTokenDTO> login(@Validated @RequestBody AuthLoginDTO authLoginDTO) throws JsonProcessingException {
+    public RestResponse<AuthTokenDTO> login(@Validated @RequestBody AuthLoginDTO authLoginDTO) {
         AuthTokenDTO authTokenDTO = authService.login(authLoginDTO);
 
         return RestResponse
@@ -45,8 +45,7 @@ public class AuthController {
         @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "발급실패")
     })
     @PostMapping("/auth/refreshToken")
-    public RestResponse<AuthTokenDTO> getNewAccessToken(@Validated @RequestBody RenewAuthTokenDTO renewAuthTokenDTO)
-            throws JsonProcessingException {
+    public RestResponse<AuthTokenDTO> getNewAccessToken(@Validated @RequestBody RenewAuthTokenDTO renewAuthTokenDTO) {
         AuthTokenDTO authTokenDTO = authService.renewAccessToken(renewAuthTokenDTO);
 
         return RestResponse
