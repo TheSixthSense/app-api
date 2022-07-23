@@ -3,7 +3,7 @@ package com.app.api.core.application;
 
 import com.app.api.common.util.DateUtil;
 import com.app.api.core.exception.BizException;
-import com.app.api.jwt.dto.CreateTokenRequestDto;
+import com.app.api.jwt.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -44,15 +44,15 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    public String createAccessToken(CreateTokenRequestDto tokenDto) {
+    public String createAccessToken(TokenDto tokenDto) {
         return createToken(tokenDto, accessTime);
     }
 
-    public String createRefreshToken(CreateTokenRequestDto tokenDto) {
+    public String createRefreshToken(TokenDto tokenDto) {
         return createToken(tokenDto, refreshTime);
     }
 
-    private String createToken(CreateTokenRequestDto tokenDto, Long expireTime) {
+    private String createToken(TokenDto tokenDto, Long expireTime) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer(jwtIssuer)

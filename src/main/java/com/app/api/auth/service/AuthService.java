@@ -4,7 +4,9 @@ import com.app.api.auth.dto.AuthLoginDTO;
 import com.app.api.auth.dto.AuthTokenDTO;
 import com.app.api.auth.dto.RenewAuthTokenDTO;
 import com.app.api.common.util.Url;
+import com.app.api.core.application.JwtProvider;
 import com.app.api.core.exception.BizException;
+import com.app.api.jwt.dto.TokenDto;
 import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +32,8 @@ public class AuthService {
 
     private final ObjectMapper objectMapper;
 
+    private final JwtProvider jwtProvider;
+
     /**
      * 로그인
      */
@@ -39,29 +43,17 @@ public class AuthService {
                         withUserMessageKey("exception.auth.appleId.not.found")
                         .build());
 
-        Long userId = user.getId();
+        TokenDto tokenDto = TokenDto.builder()
+                .userId(user.getId())
+                .build();
 
-        // url
-        String securityUrl = UriComponentsBuilder
-                .fromHttpUrl(Url.appSecurity + "/auth")
-                .build()
-                .toUriString();
+        String accessToken = jwtProvider.createAccessToken(tokenDto);
+        String refreshToken = jwtProvider.createRefreshToken(tokenDto);
 
-        // headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // Request Body
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put("userId", userId);
-        String body = objectMapper.writeValueAsString(requestData);
-
-        // request
-        HttpEntity<String> request = new HttpEntity<>(body, headers);
-        ResponseEntity<String> resp = restTemplate.exchange(securityUrl, HttpMethod.POST, request, String.class);
-
-        // convert data
-        return objectMapper.readValue(resp.getBody(), AuthTokenDTO.class);
+        return AuthTokenDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     /**
