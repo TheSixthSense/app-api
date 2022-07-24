@@ -30,7 +30,7 @@ public class UserRegDTO {
     @NotEmpty
     private String nickName;
 
-    @ApiModelProperty(value = "성별", example = "MEN", required = true)
+    @ApiModelProperty(value = "성별", example = "MALE", required = true)
     @ValueOfEnum(enumClass = Gender.class)
     private Gender gender;
 

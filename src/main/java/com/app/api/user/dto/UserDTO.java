@@ -24,7 +24,7 @@ public class UserDTO {
     @ApiModelProperty(value = "닉네임", example = "비건첼린져_1")
     private String nickName;
 
-    @ApiModelProperty(value = "성별", example = "MEN")
+    @ApiModelProperty(value = "성별", example = "MALE")
     private Gender gender;
 
     @ApiModelProperty(value = "생년월일", example = "19920910")
