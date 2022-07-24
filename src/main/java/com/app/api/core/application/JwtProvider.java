@@ -80,7 +80,7 @@ public class JwtProvider {
         Claims claims = parseClaims(accessToken);
         validateClaims(claims);
 
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(claims.get("role").toString()));
 
         UserDetails principal = new User(claims.get("user_id").toString(), "", authorities);
@@ -90,11 +90,11 @@ public class JwtProvider {
 
     public void validateClaims(Claims claims) {
         if (Objects.isNull(claims)) {
-            log.error("[JWT Token Filter Error]: claims User Not Found. Please check header.");
+            log.error("[JWT Token Filter Error]: Claims not found. Please check header.");
             throw BizException.withUserMessageKey("exception.jwt.token.claims.invalid").build();
         }
         if (Objects.isNull(claims.get("role"))) {
-            log.error("[JWT Token Filter Error]: User Not Found. Please check header.");
+            log.error("[JWT Token Filter Error]: Role not found. Please check header.");
             throw BizException.withUserMessageKey("exception.jwt.token.claims.role.invalid").build();
         }
     }

@@ -10,7 +10,6 @@ import com.app.api.jwt.entity.RefreshToken;
 import com.app.api.jwt.repository.RefreshTokenRepository;
 import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import static com.app.api.common.util.form.Form.checkEmailForm;
+import static com.app.api.common.util.jwt.JwtUtil.getEmailFromAppleSecretToken;
 
 @Slf4j
 @Service
@@ -36,13 +38,18 @@ public class AuthService {
      */
     @Transactional
     public AuthTokenDTO login(AuthLoginDTO authLoginDTO) {
-        User user = userRepository.findByAppleId(authLoginDTO.getAppleId())
+        String email = getEmailFromAppleSecretToken(authLoginDTO.getClientSecret());
+
+        // 이메일 형식 체크
+        checkEmailForm(email);
+
+        User user = userRepository.findByAppleIdAndEmail(authLoginDTO.getAppleId(), email)
                 .orElseThrow(() -> BizException.
                         withUserMessageKey("exception.auth.appleId.not.found")
                         .build());
 
         Long userId = user.getId();
-        TokenDto tokenDto = new TokenDto(userId);
+        TokenDto tokenDto = new TokenDto(userId, user.getUserRoleType());
 
         String accessToken = jwtProvider.createAccessToken(tokenDto);
         String refreshToken = jwtProvider.createRefreshToken(tokenDto);
