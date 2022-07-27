@@ -10,7 +10,6 @@ public class ApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
+		System.out.println("jenkins 자동 배포 테스트");
 	}
-
-	// test commit (jenkins 자동배포 테스트)
 }
