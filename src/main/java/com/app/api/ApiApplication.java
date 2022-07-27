@@ -10,6 +10,5 @@ public class ApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
-		System.out.println("jenkins 자동 배포 테스트 - 웹훅 설치- 플러그 설치완료");
 	}
 }
