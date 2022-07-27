@@ -12,4 +12,5 @@ public class ApiApplication {
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
+	// test commit (jenkins 자동배포 테스트)
 }
