@@ -45,6 +45,5 @@ public class UserRegDTO {
 
     @ApiModelProperty(value = "계정 권한", example = "USER")
     @ValueOfEnum(enumClass = UserRoleType.class)
-    @NotNull
     private UserRoleType userRoleType;
 }
