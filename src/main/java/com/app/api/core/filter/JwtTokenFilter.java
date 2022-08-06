@@ -1,7 +1,8 @@
 package com.app.api.core.filter;
 
 import com.app.api.core.application.JwtProvider;
-import com.app.api.core.exception.BizException;
+import com.app.api.core.response.RestResponse;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -33,11 +35,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
-            throw BizException.withUserMessageKey("exception.jwt.token.auth").build();
+            setResponse(response, e);
+            return ;
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -47,5 +49,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return bearerToken.substring("Bearer ".length());
         }
         return null;
+    }
+
+    private void setResponse(HttpServletResponse response, RuntimeException rException) throws IOException {
+        Gson gson = new Gson();
+        String responseBody = gson.toJson(RestResponse
+                .withData(new HashMap<>())
+                .withUserMessage(rException.getMessage())
+                .build());
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().print(responseBody);
     }
 }
