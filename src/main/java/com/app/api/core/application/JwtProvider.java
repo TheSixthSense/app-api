@@ -69,11 +69,16 @@ public class JwtProvider {
     }
 
     public Claims parseClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getJwtSecret())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getJwtSecret())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw BizException.withUserMessageKey("exception.jwt.token.invalid").build();
+        }
+
     }
 
     public Authentication getAuthentication(String accessToken) {
