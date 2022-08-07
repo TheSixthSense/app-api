@@ -18,6 +18,8 @@ public class BaseExceptionBuilder {
     private String userMessageKey;
     private Object[] userMessageArgs;
     private String systemMessage;
+    private String systemMessageKey;
+    private Object[] systemMessageArgs;
     private Throwable cause;
     private boolean enableSuppression = false;
     private boolean writableStackTrace = true;
@@ -60,6 +62,16 @@ public class BaseExceptionBuilder {
         return withSystemMessage(formatMess(systemMessageFormat, objects));
     }
 
+    public BaseExceptionBuilder withSystemMessageKey(String systemMessageKey, Object... objects) {
+        this.systemMessageKey = systemMessageKey;
+        this.systemMessageArgs = objects;
+        return this;
+    }
+
+    public BaseExceptionBuilder withSystemMessageKey(String systemMessageKey) {
+        return withSystemMessageKey(systemMessageKey, (Object[]) null);
+    }
+
     public BaseExceptionBuilder withCause(Throwable cause) {
         this.cause = cause;
         return this;
@@ -83,6 +95,11 @@ public class BaseExceptionBuilder {
         if (StringUtils.isNotBlank(this.userMessageKey)) {
             this.userMessage = messageSource.getMessage(this.userMessageKey, this.userMessageArgs,
                                                 LocaleContextHolder.getLocale());
+        }
+
+        if (StringUtils.isNotBlank(this.systemMessageKey)) {
+            this.systemMessage = messageSource.getMessage(this.systemMessageKey, this.systemMessageArgs,
+                    LocaleContextHolder.getLocale());
         }
 
         // 메세지 없을 시 예외별 기본메세지 전송

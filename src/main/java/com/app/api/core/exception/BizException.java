@@ -45,4 +45,13 @@ public class BizException extends BaseException {
         return new BaseExceptionBuilder(clazz)
                 .withSystemMessage(systemMessageFormat, objects);
     }
-}
+
+    public static BaseExceptionBuilder withSystemMessageKey(String systemMessageKey) {
+        return new BaseExceptionBuilder(clazz)
+                .withSystemMessageKey(systemMessageKey);
+    }
+
+    public static BaseExceptionBuilder withSystemMessageKey(String systemMessageKeyFormat, Object... objects) {
+        return new BaseExceptionBuilder(clazz)
+                .withSystemMessageKey(systemMessageKeyFormat, objects);
+    }}

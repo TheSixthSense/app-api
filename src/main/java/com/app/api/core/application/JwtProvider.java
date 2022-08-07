@@ -108,16 +108,16 @@ public class JwtProvider {
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
-            throw BizException.withUserMessageKey("exception.jwt.token.invalid").build();
+            throw BizException.withSystemMessageKey("exception.jwt.token.invalid").build();
         } catch (ExpiredJwtException e) {
             log.error("JWT token is expired: {}", e.getMessage());
-            throw BizException.withUserMessageKey("exception.jwt.token.expire").build();
+            throw BizException.withSystemMessageKey("exception.jwt.token.expire").build();
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported: {}", e.getMessage());
-            throw BizException.withUserMessageKey("exception.jwt.token.invalid").build();
+            throw BizException.withSystemMessageKey("exception.jwt.token.invalid").build();
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
-            throw BizException.withUserMessageKey("exception.jwt.token.invalid").build();
+            throw BizException.withSystemMessageKey("exception.jwt.token.invalid").build();
         }
     }
 }
