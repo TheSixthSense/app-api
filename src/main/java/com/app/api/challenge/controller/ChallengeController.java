@@ -1,5 +1,6 @@
 package com.app.api.challenge.controller;
 
+import com.app.api.challenge.dto.ChallengeListDto;
 import com.app.api.challenge.entity.Challenge;
 import com.app.api.challenge.service.ChallengeService;
 import com.app.api.core.response.RestResponse;
@@ -27,9 +28,9 @@ public class ChallengeController {
             @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "챌린지 조회 성공"),
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 조회 실패")
     })
-    @PostMapping("/challenge/{categoryId}")
-    public RestResponse<List<Challenge>> getChallengeListByCategoryId(@PathVariable("categoryId") Long categoryId) {
-        List<Challenge> challengeList = challengeService.getChallengeListByCategoryId(categoryId);
+    @GetMapping("/challenge/{categoryId}")
+    public RestResponse<List<ChallengeListDto>> getChallengeListByCategoryId(@PathVariable("categoryId") Long categoryId) {
+        List<ChallengeListDto> challengeList = challengeService.getChallengeListByCategoryId(categoryId);
         return RestResponse
                 .withData(challengeList)
                 .withUserMessageKey("success.challenge.list.found")
