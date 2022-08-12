@@ -1,6 +1,8 @@
 package com.app.api.user.controller;
 
 import com.app.api.core.response.RestResponse;
+import com.app.api.user.aop.User;
+import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
 import com.app.api.user.service.UserService;
 import io.swagger.annotations.Api;
@@ -10,6 +12,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "사용자")
 @RestController
@@ -44,16 +47,30 @@ public class UserController {
                 .build();
     }
 
+    @ApiOperation(value = "회원탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "회원탈퇴 성공"),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "회원탈퇴 실패")
+    })
+    @DeleteMapping("/user/withdraw")
+    public RestResponse<Object> userWithdraw(@ApiIgnore @User UserDTO userDTO) {
+        userService.userWithDraw(userDTO);
+        return RestResponse
+                .withUserMessageKey("success.user.withdraw")
+                .build();
+    }
+
 //    @ApiOperation(value = "내 정보 보기")
 //    @ApiResponses(value = {
 //            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "내 정보 보기 성공"),
 //            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "내 정보 보기 실패")
 //    })
 //    @GetMapping("/user/me")
-//    public RestResponse<UserDTO> getUserInfo(@ApiIgnore @User UserDTO userDTO) {
+//    public RestResponse<UserViewDTO> getUserInfo(@ApiIgnore @User UserDTO userDTO) {
+//        UserViewDTO userViewDTO = UserViewDTO.from(userDTO);
 //        return RestResponse
-//                .withData(userDTO)
-//                .withUserMessageKey("success.user.get")
+//                .withData(userViewDTO)
+//                .withUserMessageKey("success.user.get.info")
 //                .build();
 //    }
 }

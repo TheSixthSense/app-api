@@ -44,8 +44,8 @@ public class WebSecurityConfig {
                                 "/auth/login",
                                 "/check/nick-name"
                         ).permitAll()
-                        .antMatchers("/user/**").hasRole("USER")
-                        .antMatchers("/admin/**").hasRole("ADMIN")
+                        .antMatchers("/user/**").hasAuthority("USER")
+                        .antMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

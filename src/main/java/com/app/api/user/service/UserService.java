@@ -1,16 +1,17 @@
 package com.app.api.user.service;
 
 import com.app.api.core.exception.BizException;
+import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
 import com.app.api.user.entity.User;
+import com.app.api.user.entity.UserWithdraw;
 import com.app.api.user.enums.UserRoleType;
 import com.app.api.user.repository.UserRepository;
+import com.app.api.user.repository.UserWithdrawRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.app.api.common.util.form.Form.checkEmailForm;
 import static com.app.api.common.util.jwt.JwtUtil.getEmailFromAppleSecretToken;
@@ -20,6 +21,8 @@ import static com.app.api.common.util.jwt.JwtUtil.getEmailFromAppleSecretToken;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserWithdrawRepository userWithdrawRepository;
+    private final ModelMapper modelMapper;
 
     /**
      * 회원가입
@@ -67,6 +70,20 @@ public class UserService {
         userRepository.findByNickName(nickName).ifPresent(user -> {
             throw BizException.withUserMessageKey("exception.user.nickName.already.exist").build();
         });
+    }
+
+    /**
+     * 회원탈퇴
+     */
+    @Transactional
+    public void userWithDraw(UserDTO userDTO) {
+        UserWithdraw userWithdraw = modelMapper.map(userDTO, UserWithdraw.class);
+        userRepository.findById(userDTO.getId())
+                .orElseThrow(() ->
+                        BizException.withUserMessage("exception.user.not.found").build());
+
+        userWithdrawRepository.save(userWithdraw);
+        userRepository.deleteById(userDTO.getId());
     }
 
     /**

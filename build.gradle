@@ -33,6 +33,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// modelMapper
+	implementation 'org.modelmapper:modelmapper:3.1.0'
+
+
 	// h2
 	runtimeOnly 'com.h2database:h2'
 

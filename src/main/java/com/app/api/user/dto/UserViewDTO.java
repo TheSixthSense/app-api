@@ -1,6 +1,5 @@
 package com.app.api.user.dto;
 
-import com.app.api.user.entity.User;
 import com.app.api.user.enums.Gender;
 import com.app.api.user.enums.UserRoleType;
 import com.app.api.user.enums.VegannerStage;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder @AllArgsConstructor @NoArgsConstructor
-public class UserDTO {
+public class UserViewDTO {
 
     @ApiModelProperty(value = "id", example = "1")
     private Long id;
@@ -45,19 +44,4 @@ public class UserDTO {
 
     @ApiModelProperty(value = "수정날짜", example = "2022-07-10T00:55:00.181448")
     private LocalDateTime updatedDate;
-
-    public static UserDTO from(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .appleId(user.getAppleId())
-                .email(user.getEmail())
-                .nickName(user.getNickName())
-                .gender(user.getGender())
-                .birthDay(user.getBirthDay())
-                .vegannerStage(user.getVegannerStage())
-                .userRoleType(user.getUserRoleType())
-                .createdDate(user.getCreatedDate())
-                .updatedDate(user.getUpdatedDate())
-                .build();
-    }
 }
