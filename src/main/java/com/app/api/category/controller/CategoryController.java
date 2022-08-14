@@ -1,5 +1,6 @@
 package com.app.api.category.controller;
 
+import com.app.api.category.dto.CategoryListDto;
 import com.app.api.category.entity.Category;
 import com.app.api.category.service.CategoryService;
 import com.app.api.core.response.RestResponse;
@@ -26,8 +27,8 @@ public class CategoryController {
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "카테고리 조회 실패")
     })
     @PostMapping("/category/list")
-    public RestResponse<List<Category>> getCategoryList() {
-        List<Category> categoryList = categoryService.getCategoryList();
+    public RestResponse<List<CategoryListDto>> getCategoryList() {
+        List<CategoryListDto> categoryList = categoryService.getCategoryList();
         return RestResponse
                 .withData(categoryList)
                 .withUserMessageKey("success.category.list.found")
