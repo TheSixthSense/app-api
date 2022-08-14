@@ -44,7 +44,6 @@ public class ChallengeControllerTest extends BaseTest {
 
         final ResultActions actions = mockMvc.perform(get("/challenge/{categoryId}", anyLong())
                 .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("utf-8")
                 .with(csrf()));
 
         actions.andExpect(status().isOk())
