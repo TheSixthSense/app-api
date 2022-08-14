@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,7 @@ public class CategoryController {
             @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "카테고리 조회 성공"),
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "카테고리 조회 실패")
     })
-    @PostMapping("/category/list")
+    @GetMapping("/category/list")
     public RestResponse<List<CategoryListDto>> getCategoryList() {
         List<CategoryListDto> categoryList = categoryService.getCategoryList();
         return RestResponse
