@@ -3,17 +3,18 @@ package com.app.api.user.controller;
 import com.app.api.config.BaseTest;
 import com.app.api.user.enums.Gender;
 import com.app.api.user.enums.VegannerStage;
+import com.app.api.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,12 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("User")
 class UserControllerTest extends BaseTest {
-    protected String appleId = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512";
-    protected String clientSecret = "eyJraWQiOiI4NkQ4OEtmIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLndoaXRlcGFlay5zZXJ2aWNlcyIsImV4cCI6MTU5ODgwMDEyOCwiaWF0IjoxNTk4Nzk5NTI4LCJzdWIiOiIwMDAxNDguZjA2ZDgyMmNlMGIyNDgzYWFhOTdkMjczYjA5NzgzMjUuMTcxNyIsIm5vbmNlIjoiMjBCMjBELTBTOC0xSzgiLCJjX2hhc2giOiJ1aFFiV0gzQUFWdEc1OUw4eEpTMldRIiwiZW1haWwiOiJpNzlmaWl0OWIzQHByaXZhdGVyZWxheS5hcHBsZWlkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlzX3ByaXZhdGVfZW1haWwiOiJ0cnVlIiwiYXV0aF90aW1lIjoxNTk4Nzk5NTI4LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.GQBCUHza0yttOfpQ-J5OvyZoGe5Zny8pI06sKVDIJaQY3bdiphllg1_pHMtPUp7FLv3ccthcmqmZn7NWVoIPkc9-_8squ_fp9F68XM-UsERKVzBvVR92TwQuKOPFr4lRn-2FlBzN4NegicMS-IV8Ad3AKTIRMIhvAXG4UgNxgPAuCpHwCwEAJijljfUfnRYO-_ywgTcF26szluBz9w0Y1nn_IIVCUzAwYiEMdLo53NoyJmWYFWu8pxmXRpunbMHl5nvFpf9nK-OGtMJrmZ4DlpTc2Gv64Zs2bwHDEvOyQ1WiRUB6_FWRH5FV10JSsccMlm6iOByOLYd03RRH2uYtFw";
-    protected String nickName = "비건첼린져_TestModule";
-    protected Gender gender = Gender.MALE;
-    protected String birthDay = "19920910";
-    protected VegannerStage vegannerStage = VegannerStage.BEGINNER;
+
+    @Autowired
+    protected UserRepository userRepository;
 
     @Test
     @Transactional
@@ -35,12 +33,12 @@ class UserControllerTest extends BaseTest {
     public void createUser() throws Exception {
         // given
         Map<String, Object> requestData = new HashMap<>();
-        requestData.put("appleId", this.appleId);
-        requestData.put("clientSecret", this.clientSecret);
-        requestData.put("nickName", this.nickName);
-        requestData.put("gender", this.gender);
-        requestData.put("birthDay", this.birthDay);
-        requestData.put("vegannerStage", this.vegannerStage);
+        requestData.put("appleId", "001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg");
+        requestData.put("clientSecret", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZV9yZWdAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.G2uUPEdQcr_9SMqMNL9fW9y2Zv-a1cwlu80XeHnKBVI");
+        requestData.put("nickName", "비건첼리져_회원가입_test");
+        requestData.put("gender", Gender.MALE);
+        requestData.put("birthDay", "19920910");
+        requestData.put("vegannerStage", VegannerStage.BEGINNER);
 
         String requestBody = objectMapper.writeValueAsString(requestData);
 
@@ -61,7 +59,7 @@ class UserControllerTest extends BaseTest {
     @DisplayName("닉네임 중복확인")
     public void checkDuplicateNickName() throws Exception {
         // given
-        String nickName = this.nickName;
+        String nickName = "notDuplicatedNickName";
 
         // when && then
         mockMvc.perform(get("/check/nick-name")
@@ -71,5 +69,21 @@ class UserControllerTest extends BaseTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("meta.userMessage")
                         .value(messageComponent.getMessage("success.user.nickname.unique")));
+    }
+
+    @Test
+    @Transactional
+    @Order(3)
+    @DisplayName("회원탈퇴")
+    public void userWithdraw() throws Exception {
+        mockMvc.perform(delete("/user/withdraw")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("meta.userMessage")
+                        .value(messageComponent.getMessage("success.user.withdraw")));
+
     }
 }

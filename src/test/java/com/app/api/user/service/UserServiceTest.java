@@ -23,14 +23,6 @@ class UserServiceTest extends BaseTest {
     @Autowired
     private UserRepository userRepository;
 
-    protected String appleId = "OOOOOOOO";
-    protected String clientSecret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RNb2R1bGUxMjNAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.TzUYx4lm5r1vpft69lbr4jTlQF1tsarxKmqb7cJRYV8";
-    protected Gender gender = Gender.MALE;
-    protected String birthDay = "19920910";
-    protected UserRoleType userRoleType = UserRoleType.USER;
-    protected String nickName = "testNickName123";
-    protected VegannerStage vegannerStage = VegannerStage.BEGINNER;
-
     @Nested
     @Order(1)
     @Transactional
