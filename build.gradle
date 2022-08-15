@@ -36,10 +36,6 @@ dependencies {
 	// modelMapper
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 
-
-	// h2
-	runtimeOnly 'com.h2database:h2'
-
 	// swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
