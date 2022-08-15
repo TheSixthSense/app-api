@@ -2,6 +2,7 @@ package com.app.api.user.service;
 
 import com.app.api.config.BaseTest;
 import com.app.api.core.exception.BizException;
+import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
 import com.app.api.user.entity.User;
 import com.app.api.user.enums.Gender;
@@ -168,6 +169,50 @@ class UserServiceTest extends BaseTest {
             assertThrows(BizException.class,
                     () -> userService.checkDuplicateNickname(nickName),
                     messageComponent.getMessage("exception.user.nickName.already.exist"));
+        }
+    }
+
+    @Nested
+    @Transactional
+    @Order(3)
+    @DisplayName("회원탈퇴")
+    class userWithdraw {
+
+        @Test()
+        @Order(1)
+        @Transactional
+        @DisplayName("회원탈퇴 - 정상")
+        void userWithdraw_correct() throws Exception {
+            // given
+            User user = userRepository.findByAppleId(appleId).orElseThrow(Exception::new);
+            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+            userService.userWithDraw(userDTO);
+
+            // when & then
+            assert true;
+        }
+
+        @Test()
+        @Order(2)
+        @Transactional
+        @DisplayName("회원탈퇴 - 예외 - 해당 아이디 미 존재")
+        void userWithdraw_error_user_not_found() {
+            // given
+            UserDTO userDTO = UserDTO.builder()
+                    .id(0L)
+                    .appleId("notExistAppleId")
+                    .birthDay("19920910")
+                    .email("notExist@gmail.com")
+                    .userRoleType(UserRoleType.USER)
+                    .vegannerStage(VegannerStage.BEGINNER)
+                    .nickName("존재하지 않는 계정 닉네임")
+                    .gender(Gender.MALE)
+                    .build();
+
+            // when & then
+            assertThrows(BizException.class,
+                    () -> userService.userWithDraw(userDTO),
+                    messageComponent.getMessage("exception.user.not.found"));
         }
     }
 }

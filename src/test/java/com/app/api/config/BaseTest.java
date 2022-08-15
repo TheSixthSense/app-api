@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,9 @@ public class BaseTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected ModelMapper modelMapper;
 
     protected static String appleId = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512";
     protected static String clientSecret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZUBnYW1pbC5jb20iLCJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.WJEl1X9KMLhBgn5RTC5VGeYMZHMUjVQc6QkFddM-Sqs";

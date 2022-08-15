@@ -76,6 +76,8 @@ class UserControllerTest extends BaseTest {
     @Order(3)
     @DisplayName("회원탈퇴")
     public void userWithdraw() throws Exception {
+        //given (accessToken)
+        //when & then
         mockMvc.perform(delete("/user/withdraw")
                         .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
