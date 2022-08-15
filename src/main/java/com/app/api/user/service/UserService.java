@@ -77,11 +77,11 @@ public class UserService {
      */
     @Transactional
     public void userWithDraw(UserDTO userDTO) {
-        UserWithdraw userWithdraw = modelMapper.map(userDTO, UserWithdraw.class);
-        userRepository.findById(userDTO.getId())
+        User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() ->
                         BizException.withUserMessage("exception.user.not.found").build());
 
+        UserWithdraw userWithdraw = modelMapper.map(user, UserWithdraw.class);
         userWithdrawRepository.save(userWithdraw);
         userRepository.deleteById(userDTO.getId());
     }
