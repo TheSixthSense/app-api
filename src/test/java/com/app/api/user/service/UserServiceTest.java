@@ -33,13 +33,13 @@ class UserServiceTest extends BaseTest {
         @BeforeEach
         void beforeEach() {
             this.userRegDTO = UserRegDTO.builder()
-                    .appleId(appleId)
-                    .clientSecret(clientSecret)
-                    .gender(gender)
-                    .birthDay(birthDay)
-                    .userRoleType(userRoleType)
-                    .nickName(nickName)
-                    .vegannerStage(vegannerStage)
+                    .appleId("001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg")
+                    .clientSecret("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZV9yZWdAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.G2uUPEdQcr_9SMqMNL9fW9y2Zv-a1cwlu80XeHnKBVI")
+                    .gender(Gender.MALE)
+                    .birthDay("19920910")
+                    .userRoleType(UserRoleType.USER)
+                    .nickName("회원가입_TEST")
+                    .vegannerStage(VegannerStage.BEGINNER)
                     .build();
         }
 
@@ -156,18 +156,18 @@ class UserServiceTest extends BaseTest {
         void error_when_nick_name_is_duplicated() {
             // given
             userRepository.save(User.builder()
-                    .appleId(appleId)
+                    .appleId("nickNameTest")
                     .email("test@gmail.com")
                     .gender(gender)
                     .birthDay(birthDay)
                     .userRoleType(userRoleType)
-                    .nickName(nickName)
+                    .nickName("duplicatedNickName")
                     .vegannerStage(vegannerStage)
                     .build());
 
             // when & then
             assertThrows(BizException.class,
-                    () -> userService.checkDuplicateNickname(nickName),
+                    () -> userService.checkDuplicateNickname("duplicatedNickName"),
                     messageComponent.getMessage("exception.user.nickName.already.exist"));
         }
     }
