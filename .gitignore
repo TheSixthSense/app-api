@@ -38,3 +38,6 @@ out/
 
 ### env ###
 *.properties
+
+### log ###
+.application_log
