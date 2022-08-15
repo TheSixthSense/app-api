@@ -4,30 +4,26 @@ import com.app.api.common.entity.BaseTimeEntity;
 import com.app.api.user.enums.Gender;
 import com.app.api.user.enums.UserRoleType;
 import com.app.api.user.enums.VegannerStage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
-@Table(name = "user")
-public class User extends BaseTimeEntity {
+@Table(name = "user_withdraw")
+public class UserWithdraw extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String appleId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName;
 
     @Column(nullable = false)
