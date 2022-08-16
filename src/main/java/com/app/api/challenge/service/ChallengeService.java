@@ -5,16 +5,18 @@ import com.app.api.challenge.entity.Challenge;
 import com.app.api.challenge.repository.ChallengeRepository;
 import com.app.api.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
 
+    private final ModelMapper modelMapper;
     private final ChallengeRepository challengeRepository;
 
     public List<ChallengeListDto> getChallengeListByCategoryId(Long categoryId) {
@@ -24,17 +26,9 @@ public class ChallengeService {
             throw BizException.withUserMessageKey("exception.challenge.list.not.found").build();
         }
 
-        List<ChallengeListDto> challengeListDtoList = new ArrayList<>();
-
-        for (Challenge challenge : challengeList) {
-            challengeListDtoList.add(ChallengeListDto.builder()
-                    .id(challenge.getId())
-                    .categoryId(challenge.getCategoryId())
-                    .name(challenge.getName())
-                    .emoji(challenge.getEmoji())
-                    .description(challenge.getDescription())
-                    .build());
-        }
+        List<ChallengeListDto> challengeListDtoList = challengeList.stream()
+                .map(challenge -> modelMapper.map(challenge, ChallengeListDto.class))
+                .collect(Collectors.toList());
 
         return challengeListDtoList;
     }
@@ -46,17 +40,9 @@ public class ChallengeService {
             throw BizException.withUserMessageKey("exception.challenge.total.list.not.found").build();
         }
 
-        List<ChallengeListDto> challengeListDtoList = new ArrayList<>();
-
-        for (Challenge challenge : challengeList) {
-            challengeListDtoList.add(ChallengeListDto.builder()
-                    .id(challenge.getId())
-                    .categoryId(challenge.getCategoryId())
-                    .name(challenge.getName())
-                    .emoji(challenge.getEmoji())
-                    .description(challenge.getDescription())
-                    .build());
-        }
+        List<ChallengeListDto> challengeListDtoList = challengeList.stream()
+                .map(challenge -> modelMapper.map(challenge, ChallengeListDto.class))
+                .collect(Collectors.toList());
 
         return challengeListDtoList;
 
