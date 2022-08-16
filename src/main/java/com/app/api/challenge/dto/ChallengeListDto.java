@@ -14,5 +14,6 @@ public class ChallengeListDto {
     private long id;
     private long categoryId;
     private String name;
+    private String emoji;
     private String description;
 }

@@ -31,6 +31,29 @@ public class ChallengeService {
                     .id(challenge.getId())
                     .categoryId(challenge.getCategoryId())
                     .name(challenge.getName())
+                    .emoji(challenge.getEmoji())
+                    .description(challenge.getDescription())
+                    .build());
+        }
+
+        return challengeListDtoList;
+    }
+
+    public List<ChallengeListDto> getChallengeList() {
+        List<Challenge> challengeList = challengeRepository.findAll();
+
+        if (challengeList.isEmpty()) {
+            throw BizException.withUserMessageKey("exception.challenge.total.list.not.found").build();
+        }
+
+        List<ChallengeListDto> challengeListDtoList = new ArrayList<>();
+
+        for (Challenge challenge : challengeList) {
+            challengeListDtoList.add(ChallengeListDto.builder()
+                    .id(challenge.getId())
+                    .categoryId(challenge.getCategoryId())
+                    .name(challenge.getName())
+                    .emoji(challenge.getEmoji())
                     .description(challenge.getDescription())
                     .build());
         }
