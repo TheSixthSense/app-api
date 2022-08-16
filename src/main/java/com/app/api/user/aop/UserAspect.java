@@ -26,12 +26,14 @@ public class UserAspect {
     @Around("execution(* *(.., @User (*), ..))")
     public Object coverAroundUserAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
-        Long userId = Long.parseLong(userDetails.getUsername()); // user id
 
         // User 정보 반환
         Object[] args = Arrays.stream(joinPoint.getArgs()).map(data -> {
             if (data instanceof UserDTO) {
+                if (principal == "anonymousUser") return null; // 비로그인시 null 반환
+                assert principal instanceof UserDetails;
+                UserDetails userDetails = (UserDetails)principal;
+                Long userId = Long.parseLong(userDetails.getUsername()); // user id
                 User user = userRepository.findById(userId)
                         .orElseThrow(() -> BizException
                                 .withUserMessageKey("exception.user.not.found")

@@ -2,6 +2,7 @@ package com.app.api.user.service;
 
 import com.app.api.config.BaseTest;
 import com.app.api.core.exception.BizException;
+import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
 import com.app.api.user.entity.User;
 import com.app.api.user.enums.Gender;
@@ -23,14 +24,6 @@ class UserServiceTest extends BaseTest {
     @Autowired
     private UserRepository userRepository;
 
-    protected String appleId = "OOOOOOOO";
-    protected String clientSecret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RNb2R1bGUxMjNAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.TzUYx4lm5r1vpft69lbr4jTlQF1tsarxKmqb7cJRYV8";
-    protected Gender gender = Gender.MALE;
-    protected String birthDay = "19920910";
-    protected UserRoleType userRoleType = UserRoleType.USER;
-    protected String nickName = "testNickName123";
-    protected VegannerStage vegannerStage = VegannerStage.BEGINNER;
-
     @Nested
     @Order(1)
     @Transactional
@@ -40,13 +33,13 @@ class UserServiceTest extends BaseTest {
         @BeforeEach
         void beforeEach() {
             this.userRegDTO = UserRegDTO.builder()
-                    .appleId(appleId)
-                    .clientSecret(clientSecret)
-                    .gender(gender)
-                    .birthDay(birthDay)
-                    .userRoleType(userRoleType)
-                    .nickName(nickName)
-                    .vegannerStage(vegannerStage)
+                    .appleId("001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg")
+                    .clientSecret("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZV9yZWdAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.G2uUPEdQcr_9SMqMNL9fW9y2Zv-a1cwlu80XeHnKBVI")
+                    .gender(Gender.MALE)
+                    .birthDay("19920910")
+                    .userRoleType(UserRoleType.USER)
+                    .nickName("회원가입_TEST")
+                    .vegannerStage(VegannerStage.BEGINNER)
                     .build();
         }
 
@@ -163,19 +156,63 @@ class UserServiceTest extends BaseTest {
         void error_when_nick_name_is_duplicated() {
             // given
             userRepository.save(User.builder()
-                    .appleId(appleId)
+                    .appleId("nickNameTest")
                     .email("test@gmail.com")
                     .gender(gender)
                     .birthDay(birthDay)
                     .userRoleType(userRoleType)
-                    .nickName(nickName)
+                    .nickName("duplicatedNickName")
                     .vegannerStage(vegannerStage)
                     .build());
 
             // when & then
             assertThrows(BizException.class,
-                    () -> userService.checkDuplicateNickname(nickName),
+                    () -> userService.checkDuplicateNickname("duplicatedNickName"),
                     messageComponent.getMessage("exception.user.nickName.already.exist"));
+        }
+    }
+
+    @Nested
+    @Transactional
+    @Order(3)
+    @DisplayName("회원탈퇴")
+    class userWithdraw {
+
+        @Test()
+        @Order(1)
+        @Transactional
+        @DisplayName("회원탈퇴 - 정상")
+        void userWithdraw_correct() throws Exception {
+            // given
+            User user = userRepository.findByAppleId(appleId).orElseThrow(Exception::new);
+            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+            userService.userWithDraw(userDTO);
+
+            // when & then
+            assert true;
+        }
+
+        @Test()
+        @Order(2)
+        @Transactional
+        @DisplayName("회원탈퇴 - 예외 - 해당 아이디 미 존재")
+        void userWithdraw_error_user_not_found() {
+            // given
+            UserDTO userDTO = UserDTO.builder()
+                    .id(0L)
+                    .appleId("notExistAppleId")
+                    .birthDay("19920910")
+                    .email("notExist@gmail.com")
+                    .userRoleType(UserRoleType.USER)
+                    .vegannerStage(VegannerStage.BEGINNER)
+                    .nickName("존재하지 않는 계정 닉네임")
+                    .gender(Gender.MALE)
+                    .build();
+
+            // when & then
+            assertThrows(BizException.class,
+                    () -> userService.userWithDraw(userDTO),
+                    messageComponent.getMessage("exception.user.not.found"));
         }
     }
 }
