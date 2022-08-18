@@ -36,6 +36,9 @@ public class UserChallenge extends BaseTimeEntity {
     private LocalDateTime verificationDate;
 
     @Column
+    private String verificationMemo;
+
+    @Column
     private String verificationImage;
 
 }
