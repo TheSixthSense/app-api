@@ -27,5 +27,8 @@ public class Challenge extends BaseTimeEntity {
     private String name;
 
     @Column
+    private String emoji;
+
+    @Column
     private String description;
 }
