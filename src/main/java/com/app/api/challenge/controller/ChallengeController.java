@@ -1,18 +1,16 @@
 package com.app.api.challenge.controller;
 
 import com.app.api.challenge.dto.ChallengeListDto;
-import com.app.api.challenge.entity.Challenge;
 import com.app.api.challenge.service.ChallengeService;
 import com.app.api.core.response.RestResponse;
-import com.app.api.user.dto.UserRegDTO;
-import com.app.api.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
