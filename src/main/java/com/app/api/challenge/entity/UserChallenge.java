@@ -29,6 +29,9 @@ public class UserChallenge extends BaseTimeEntity {
     private Long challengeId;
 
     @Column(nullable = false)
+    private LocalDateTime challengeDate;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ChallengeStatus verificationStatus;
 
