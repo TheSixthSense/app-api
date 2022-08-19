@@ -1,6 +1,6 @@
 package com.app.api.challenge.controller;
 
-import com.app.api.challenge.dto.ChallengeListDto;
+import com.app.api.challenge.dto.ChallengeGuideListDto;
 import com.app.api.challenge.service.ChallengeGuideService;
 import com.app.api.core.response.RestResponse;
 import io.swagger.annotations.Api;
@@ -27,11 +27,11 @@ public class ChallengeGuideController {
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지별 가이드 조회 실패")
     })
     @GetMapping("/challenge/guide/{challengeId}")
-    public RestResponse<List<ChallengeListDto>> getChallengeGuideByChallengeId(@PathVariable("challengeId") Long challengeId) {
-        List<ChallengeListDto> guideList = challengeGuideService.getChallengeGuideByChallengeId(challengeId);
+    public RestResponse<List<ChallengeGuideListDto>> getChallengeGuideByChallengeId(@PathVariable("challengeId") Long challengeId) {
+        List<ChallengeGuideListDto> guideList = challengeGuideService.getChallengeGuideByChallengeId(challengeId);
         return RestResponse
                 .withData(guideList)
-                .withUserMessageKey("success.challenge.list.found")
+                .withUserMessageKey("success.challenge.guide.list.found")
                 .build();
     }
 
