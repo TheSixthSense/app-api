@@ -1,5 +1,7 @@
 package com.app.api.s3.controller;
 
+import com.app.api.common.util.file.FileUtil;
+import com.app.api.core.exception.BizException;
 import com.app.api.core.response.RestResponse;
 import com.app.api.core.s3.NaverS3Uploader;
 import io.swagger.annotations.Api;
@@ -25,7 +27,11 @@ public class S3Controller {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "이미지 업로드 실패")
     })
     @PostMapping("/image")
-    public RestResponse<String> uploadImage(@RequestPart(value = "file") MultipartFile multipartFile) {
+    public RestResponse<String> uploadImage(@RequestPart(value = "file") MultipartFile multipartFile) throws Exception {
+        // 파일형식 체크
+        boolean permissionFileExt = FileUtil.isPermissionFileExt(multipartFile.getOriginalFilename());
+        if (!permissionFileExt) throw BizException.withUserMessageKey("exception.common.file.extension.not.allow").build();
+
         String uploadUrl = naverS3Uploader.upload(multipartFile);
         return RestResponse
                 .withData(uploadUrl)
