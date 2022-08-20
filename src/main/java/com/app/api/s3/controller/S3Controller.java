@@ -4,6 +4,7 @@ import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
 import com.app.api.core.response.RestResponse;
 import com.app.api.core.s3.NaverS3Uploader;
+import com.app.api.core.s3.S3Folder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,7 +33,7 @@ public class S3Controller {
         boolean permissionFileExt = FileUtil.isPermissionFileExt(multipartFile.getOriginalFilename());
         if (!permissionFileExt) throw BizException.withUserMessageKey("exception.common.file.extension.not.allow").build();
 
-        String uploadUrl = naverS3Uploader.upload(multipartFile);
+        String uploadUrl = naverS3Uploader.upload(multipartFile, S3Folder.IMAGE);
         return RestResponse
                 .withData(uploadUrl)
                 .withUserMessageKey("success.s3.upload.image")

@@ -25,10 +25,10 @@ public class NaverS3Uploader {
     @Value("${s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile) {
+    public String upload(MultipartFile multipartFile, S3Folder s3Folder) {
         validateFileExists(multipartFile);
 
-        String fileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        String fileName = s3Folder.getPath() + "/" + UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
