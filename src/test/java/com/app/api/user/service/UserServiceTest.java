@@ -33,7 +33,7 @@ class UserServiceTest extends BaseTest {
         @BeforeEach
         void beforeEach() {
             this.userRegDTO = UserRegDTO.builder()
-                    .appleId("001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg")
+                    .appleId("001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg_test")
                     .clientSecret("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZV9yZWdAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.G2uUPEdQcr_9SMqMNL9fW9y2Zv-a1cwlu80XeHnKBVI")
                     .gender(Gender.MALE)
                     .birthDay("19920910")

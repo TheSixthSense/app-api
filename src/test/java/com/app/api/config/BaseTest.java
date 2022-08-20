@@ -39,7 +39,7 @@ public class BaseTest {
     @Autowired
     protected ModelMapper modelMapper;
 
-    protected static String appleId = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512";
+    protected static String appleId = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512_test";
     protected static String clientSecret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZUBnYW1pbC5jb20iLCJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.WJEl1X9KMLhBgn5RTC5VGeYMZHMUjVQc6QkFddM-Sqs";
     protected static String email = "test_code@gamil.com";
     protected static String nickName = "비건첼린져_TestModule";
