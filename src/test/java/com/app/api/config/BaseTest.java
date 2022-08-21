@@ -78,7 +78,6 @@ public class BaseTest {
 
     }
 
-//    @BeforeAll
     @BeforeAll
     static void startTest() {
 
