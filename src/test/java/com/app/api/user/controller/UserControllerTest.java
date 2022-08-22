@@ -33,7 +33,7 @@ class UserControllerTest extends BaseTest {
     public void createUser() throws Exception {
         // given
         Map<String, Object> requestData = new HashMap<>();
-        requestData.put("appleId", "001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg");
+        requestData.put("appleId", "001805.7d48278a5f8d4c618263bef5a616f7dc.1512_reg_test");
         requestData.put("clientSecret", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZV9yZWdAZ21haWwuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.G2uUPEdQcr_9SMqMNL9fW9y2Zv-a1cwlu80XeHnKBVI");
         requestData.put("nickName", "비건첼리져_회원가입_test");
         requestData.put("gender", Gender.MALE);

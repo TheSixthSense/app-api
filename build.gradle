@@ -51,6 +51,9 @@ dependencies {
 	// mariadb
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.1'
 
+	// s3 (naver cloud object storage)
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.11.238'
+
 }
 
 tasks.named('test') {
