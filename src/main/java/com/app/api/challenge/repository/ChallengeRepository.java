@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
     List<Challenge> findByCategoryId(Long categoryId);
+    List<Challenge> findAllByOrderBySortAsc();
 }

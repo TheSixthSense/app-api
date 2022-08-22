@@ -31,4 +31,7 @@ public class Challenge extends BaseTimeEntity {
 
     @Column
     private String description;
+
+    @Column
+    private Integer sort;
 }

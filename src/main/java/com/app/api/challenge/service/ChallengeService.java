@@ -6,6 +6,7 @@ import com.app.api.challenge.repository.ChallengeRepository;
 import com.app.api.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class ChallengeService {
     }
 
     public List<ChallengeListDto> getChallengeList() {
-        List<Challenge> challengeList = challengeRepository.findAll();
+        List<Challenge> challengeList = challengeRepository.findAllByOrderBySortAsc();
 
         if (challengeList.isEmpty()) {
             throw BizException.withUserMessageKey("exception.challenge.total.list.not.found").build();
