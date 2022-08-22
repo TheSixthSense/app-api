@@ -16,5 +16,6 @@ public class ChallengeGuideListDto {
     private String title;
     private String description;
     private String imagePath;
-    
+    private Integer sort;
+
 }

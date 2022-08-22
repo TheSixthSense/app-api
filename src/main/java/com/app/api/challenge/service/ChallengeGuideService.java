@@ -19,7 +19,7 @@ public class ChallengeGuideService {
     private final ChallengeGuideRepository challengeGuideRepository;
 
     public List<ChallengeGuideListDto> getChallengeGuideByChallengeId(Long challengeId) {
-        List<ChallengeGuide> guideList = challengeGuideRepository.findByChallengeId(challengeId);
+        List<ChallengeGuide> guideList = challengeGuideRepository.findByChallengeIdOrderBySortAsc(challengeId);
 
         if (guideList.isEmpty()) {
             throw BizException.withUserMessageKey("exception.challenge.guide.list.not.found").build();

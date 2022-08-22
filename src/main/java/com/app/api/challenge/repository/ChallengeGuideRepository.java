@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ChallengeGuideRepository extends JpaRepository<ChallengeGuide, Long> {
 
-    List<ChallengeGuide> findByChallengeId(Long challengeId);
+    List<ChallengeGuide> findByChallengeIdOrderBySortAsc(Long challengeId);
 
 }

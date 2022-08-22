@@ -35,7 +35,7 @@ public class ChallengeService {
     }
 
     public List<ChallengeListDto> getChallengeList() {
-        List<Challenge> challengeList = challengeRepository.findAllByOrderBySortAsc();
+        List<Challenge> challengeList = challengeRepository.findAllByOrderByCategoryIdAscSortAsc();
 
         if (challengeList.isEmpty()) {
             throw BizException.withUserMessageKey("exception.challenge.total.list.not.found").build();
