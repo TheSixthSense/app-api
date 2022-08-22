@@ -40,4 +40,4 @@ out/
 *.properties
 
 ### log ###
-/application_log
+/application_log/
