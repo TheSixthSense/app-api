@@ -16,5 +16,5 @@ public class ChallengeListDto {
     private String name;
     private String emoji;
     private String description;
-    private Long sort;
+    private Integer sort;
 }
