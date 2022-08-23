@@ -1,10 +1,14 @@
 package com.app.api.common.util.file;
 
+import com.app.api.core.exception.BizException;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class FileUtil {
 
-    public static boolean isPermissionFileExt(String fileName) throws Exception {
+    public static boolean isPermissionFileExt(String fileName) {
 
         final String[] PERMISSION_FILE_EXT_ARR = {"JPG"};
 
@@ -31,5 +35,12 @@ public class FileUtil {
 
         return isPermissionFileExt;
 
+    }
+
+    public static void checkPermissionImageExt(List<MultipartFile> multipartFileList) {
+        for (MultipartFile multipartFile : multipartFileList) {
+            boolean permissionFileExt = FileUtil.isPermissionFileExt(multipartFile.getOriginalFilename());
+            if (!permissionFileExt) throw BizException.withUserMessageKey("exception.common.file.extension.not.allow").build();
+        }
     }
 }
