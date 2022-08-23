@@ -31,4 +31,7 @@ public class ChallengeGuide extends BaseTimeEntity {
 
     @Column
     private String imagePath;
+
+    @Column
+    private Integer sort;
 }
