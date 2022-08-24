@@ -2,6 +2,7 @@ package com.app.api.challenge.entity;
 
 import com.app.api.challenge.enums.ChallengeStatus;
 import com.app.api.common.entity.BaseTimeEntity;
+import com.app.api.core.exception.BizException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,10 +40,22 @@ public class UserChallenge extends BaseTimeEntity {
     @Column
     private LocalDateTime verificationDate;
 
-    @Column
+    @Column(length = 100)
     private String verificationMemo;
 
     @Column
     private String verificationImage;
+
+    public void updateVerifyInfo(List<String> verificationImageList, String memo) throws BizException {
+        // 현재 정책상의 이유로 이미지 업로드는 1개만 가능
+        if (verificationImageList.size() != 1)
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
+
+        for (String imagePath : verificationImageList) {
+            this.verificationImage = imagePath;
+        }
+        this.verificationStatus = ChallengeStatus.SUCCESS;
+        this.verificationMemo = memo;
+    }
 
 }
