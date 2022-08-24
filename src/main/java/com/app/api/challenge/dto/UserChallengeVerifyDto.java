@@ -23,7 +23,7 @@ public class UserChallengeVerifyDto {
     private Long userChallengeId;
 
     // TODO: size 100자 맞는지 테스트 해봐야 한다.
-    @ApiModelProperty(value = "memo", example = "인증을 성공적으로 완료했습니다.")
+    @ApiModelProperty(value = "memo", example = "오늘의 점심! 후무스 샐러드로 대체함! 존맛탱")
     @NotEmpty
     @Size(max = 100)
     private String memo;
