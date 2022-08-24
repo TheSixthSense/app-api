@@ -23,7 +23,7 @@ public class ChallengeSuccessNotify extends BaseTimeEntity {
     @Column(nullable = false)
     private Long challengeId;
 
-    @Column(nullable = false)
+    @Column
     private String imagePath;
 
     @Column(nullable = false)
