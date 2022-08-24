@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +21,15 @@ public class UserChallengeService {
     public void joinChallenge(UserChallengeJoinDto userChallengeJoinDto, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() ->
-                        BizException.withUserMessage("exception.user.not.found").build());
+                        BizException.withUserMessageKey("exception.user.not.found").build());
 
         long challengeId = userChallengeJoinDto.getChallengeId();
         LocalDateTime challengeDate = userChallengeJoinDto.getChallengeDate();
 
-        // TODO
-        Optional<UserChallenge> userChallenge = userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate);
-        userChallenge.ifPresent(user -> BizException.withUserMessage("exception.challenge.join.already").build());
+        userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate)
+                .ifPresent(user -> {
+                    throw BizException.withUserMessageKey("exception.challenge.join.already").build();
+                });
 
         userChallengeRepository.save(UserChallenge.builder()
                 .userId(userId)
