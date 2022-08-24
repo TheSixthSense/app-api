@@ -1,7 +1,6 @@
 package com.app.api.s3.controller;
 
 import com.app.api.common.util.file.FileUtil;
-import com.app.api.core.exception.BizException;
 import com.app.api.core.response.RestResponse;
 import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
@@ -14,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Api(tags = "S3")
 @RestController
@@ -28,14 +30,17 @@ public class S3Controller {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "이미지 업로드 실패")
     })
     @PostMapping("/image")
-    public RestResponse<String> uploadImage(@RequestPart(value = "file") MultipartFile multipartFile) throws Exception {
+    public RestResponse<List<String>> uploadImage(@RequestPart(value = "file") List<MultipartFile> multipartFileList) {
         // 파일형식 체크
-        boolean permissionFileExt = FileUtil.isPermissionFileExt(multipartFile.getOriginalFilename());
-        if (!permissionFileExt) throw BizException.withUserMessageKey("exception.common.file.extension.not.allow").build();
+        FileUtil.checkPermissionImageExt(multipartFileList);
 
-        String uploadUrl = naverS3Uploader.upload(multipartFile, S3Folder.IMAGE);
+        List<String> uploadUrlList = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFileList) {
+            uploadUrlList.add(naverS3Uploader.upload(multipartFile, S3Folder.IMAGE));
+        }
+
         return RestResponse
-                .withData(uploadUrl)
+                .withData(uploadUrlList)
                 .withUserMessageKey("success.s3.upload.image")
                 .build();
     }
