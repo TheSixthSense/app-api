@@ -27,8 +27,8 @@ public class UserChallengeController {
 
     @ApiOperation(value = "챌린지 인증")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "챌린지 등록 성공"),
-            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 등록 실패")
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증 실패")
     })
     @PostMapping(value = "/user/challenge/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public RestResponse<UserChallengeVerifyResponseDto> registerUserChallenge(@Validated UserChallengeVerifyDto userChallengeVerifyDto,
