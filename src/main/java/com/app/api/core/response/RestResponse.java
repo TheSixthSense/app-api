@@ -28,6 +28,10 @@ public class RestResponse<T> implements Serializable {
         return new RestResponseBuilder<T>().withUserMessageKey(userMessageKey);
     }
 
+    public static <T> RestResponseBuilder<T> withUserMessageKey(String userMessageKey, Object... objects) {
+        return new RestResponseBuilder<T>().withUserMessageKey(userMessageKey, objects);
+    }
+
     public static <T> RestResponseBuilder<T> withSystemMessage(String systemMessage) {
         return new RestResponseBuilder<T>().withSystemMessage(systemMessage);
     }
