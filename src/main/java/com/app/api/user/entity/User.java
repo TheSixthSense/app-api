@@ -1,6 +1,7 @@
 package com.app.api.user.entity;
 
 import com.app.api.common.entity.BaseTimeEntity;
+import com.app.api.user.dto.UserUpdateDTO;
 import com.app.api.user.enums.Gender;
 import com.app.api.user.enums.UserRoleType;
 import com.app.api.user.enums.VegannerStage;
@@ -44,4 +45,11 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRoleType userRoleType;
+
+    public void updateUserInfo(UserUpdateDTO userUpdateDTO) {
+        this.nickName = userUpdateDTO.getNickName();
+        this.birthDay = userUpdateDTO.getBirthDay();
+        this.gender = userUpdateDTO.getGender();
+        this.vegannerStage = userUpdateDTO.getVegannerStage();
+    }
 }

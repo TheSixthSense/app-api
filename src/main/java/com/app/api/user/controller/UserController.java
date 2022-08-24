@@ -4,6 +4,7 @@ import com.app.api.core.response.RestResponse;
 import com.app.api.user.aop.User;
 import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
+import com.app.api.user.dto.UserUpdateDTO;
 import com.app.api.user.dto.UserViewDTO;
 import com.app.api.user.service.UserService;
 import io.swagger.annotations.Api;
@@ -72,6 +73,21 @@ public class UserController {
         return RestResponse
                 .withData(userViewDTO)
                 .withUserMessageKey("success.user.get.info")
+                .build();
+    }
+
+    @ApiOperation(value = "회원정보 수정")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "회원정보 수정 성공"),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "회원정보 수정 실패")
+    })
+    @PatchMapping("/user/info")
+    public RestResponse<UserViewDTO> updateUserInfo(@ApiIgnore @User UserDTO userDTO,
+                                               @Validated UserUpdateDTO userUpdateDTO) {
+        UserViewDTO userViewDTO = userService.updateUserInfo(userDTO, userUpdateDTO);
+        return RestResponse
+                .withData(userViewDTO)
+                .withUserMessageKey("success.user.update.info")
                 .build();
     }
 }
