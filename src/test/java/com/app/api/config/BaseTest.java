@@ -35,9 +35,9 @@ public class BaseTest {
     @Autowired
     protected ModelMapper modelMapper;
     @Autowired
-    UserRepository userRepository;
+    protected UserRepository userRepository;
     @Autowired
-    AuthService authService;
+    protected AuthService authService;
 
     protected static String appleId = "001805.7d48278a5f8d4c618263bef5a616f7dc.1512_test_static";
     protected static String clientSecret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfY29kZUBnYW1pbC5jb20iLCJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.WJEl1X9KMLhBgn5RTC5VGeYMZHMUjVQc6QkFddM-Sqs";
