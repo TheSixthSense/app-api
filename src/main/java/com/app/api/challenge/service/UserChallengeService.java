@@ -1,20 +1,26 @@
 package com.app.api.challenge.service;
 
+import com.app.api.challenge.dto.UserChallengeStatsDto;
 import com.app.api.challenge.dto.UserChallengeVerifyDto;
 import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
 import com.app.api.challenge.entity.ChallengeSuccessNotify;
 import com.app.api.challenge.entity.UserChallenge;
+import com.app.api.challenge.enums.ChallengeStatus;
 import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.challenge.repository.UserChallengeRepository;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
 import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
+import com.app.api.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +72,33 @@ public class UserChallengeService {
                 .challengeDate(userChallenge.getChallengeDate())
                 .imagePath(challengeSuccessNotify.getImagePath())
                 .message(challengeSuccessNotify.getMessage())
+                .build();
+    }
+
+    /**
+     * 사용자 챌린지 통계
+     */
+    @Transactional(readOnly = true)
+    public UserChallengeStatsDto getUserStats(UserDTO userDTO) {
+        LocalDate now = LocalDate.now();
+        LocalDateTime from = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime to = now.withDayOfMonth(now.lengthOfMonth()).atTime(LocalTime.MAX);
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDateBetween(userDTO.getId(), from, to);
+
+        int totalCount = userChallengeList.size();
+        int successCount = 0;
+        int waitingCount = 0;
+        for (UserChallenge userChallenge : userChallengeList) {
+            if (userChallenge.getVerificationStatus() == ChallengeStatus.SUCCESS)
+                successCount++;
+            else if (userChallenge.getVerificationStatus() == ChallengeStatus.WAITING)
+                waitingCount++;
+        }
+
+        return UserChallengeStatsDto.builder()
+                .totalCount(totalCount)
+                .successCount(successCount)
+                .waitingCount(waitingCount)
                 .build();
     }
 }
