@@ -84,6 +84,8 @@ public class UserService {
         UserWithdraw userWithdraw = modelMapper.map(user, UserWithdraw.class);
         userWithdrawRepository.save(userWithdraw);
         userRepository.deleteById(userDTO.getId());
+
+        // TODO: 회원탈퇴 시 인증글 삭제
     }
 
     /**
