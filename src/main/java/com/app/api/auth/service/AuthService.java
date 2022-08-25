@@ -8,6 +8,7 @@ import com.app.api.core.exception.BizException;
 import com.app.api.jwt.dto.TokenDto;
 import com.app.api.jwt.entity.RefreshToken;
 import com.app.api.jwt.repository.RefreshTokenRepository;
+import com.app.api.user.dto.UserDTO;
 import com.app.api.user.entity.User;
 import com.app.api.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -69,6 +70,19 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    /**
+     * 로그아웃
+     * PS. 이후 작업으로 redis 를 활용하여 accessToken blackList 를 구현이 필요
+     */
+    @Transactional
+    public void logout(UserDTO userDTO) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userDTO.getId())
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.auth.refreshToken.not.found").build());
+
+        // 로그아웃 시 refreshToken raw 삭제, 로그인 시 재생성
+        refreshTokenRepository.deleteById(refreshToken.getId());
     }
 
     /**

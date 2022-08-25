@@ -6,7 +6,8 @@ import com.app.api.auth.dto.AuthTokenDTO;
 import com.app.api.auth.dto.RenewAuthTokenDTO;
 import com.app.api.auth.service.AuthService;
 import com.app.api.core.response.RestResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.app.api.user.aop.User;
+import com.app.api.user.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,6 +37,20 @@ public class AuthController {
         return RestResponse
                 .withData(authTokenDTO)
                 .withUserMessageKey("success.auth.login")
+                .build();
+    }
+
+    @ApiOperation(value = "로그아웃")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "로그아웃 성공"),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "로그아웃 실패")
+    })
+    @PostMapping("/auth/logout")
+    public RestResponse<Object> logout(@User UserDTO userDTO) {
+        authService.logout(userDTO);
+
+        return RestResponse
+                .withUserMessageKey("success.auth.logout")
                 .build();
     }
 
