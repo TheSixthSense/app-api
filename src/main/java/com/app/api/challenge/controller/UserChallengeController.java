@@ -1,9 +1,12 @@
 package com.app.api.challenge.controller;
 
+import com.app.api.challenge.dto.UserChallengeStatsDto;
 import com.app.api.challenge.dto.UserChallengeVerifyDto;
 import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
 import com.app.api.challenge.service.UserChallengeService;
 import com.app.api.core.response.RestResponse;
+import com.app.api.user.aop.User;
+import com.app.api.user.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,10 +14,12 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -39,6 +44,21 @@ public class UserChallengeController {
         return RestResponse
                 .withData(userChallengeVerifyResponseDto)
                 .withUserMessageKey("success.user.challenge.register")
+                .build();
+    }
+
+    @ApiOperation(value = "챌린지 통계")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "통계정보 조회 성공"),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "통계정보 조회 실패")
+    })
+    @GetMapping("/user/challenge/stats")
+    public RestResponse<UserChallengeStatsDto> getStats(@ApiIgnore @User UserDTO userDTO) {
+        UserChallengeStatsDto userChallengeStatsDto = userChallengeService.getUserStats(userDTO);
+
+        return RestResponse
+                .withData(userChallengeStatsDto)
+                .withUserMessageKey("success.user.challenge.stats")
                 .build();
     }
 }
