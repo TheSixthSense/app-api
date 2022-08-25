@@ -76,7 +76,7 @@ public class UserChallengeService {
     }
 
     /**
-     * 회원정보 수정
+     * 사용자 챌린지 통계
      */
     @Transactional(readOnly = true)
     public UserChallengeStatsDto getUserStats(UserDTO userDTO) {
@@ -85,11 +85,10 @@ public class UserChallengeService {
         LocalDateTime to = now.withDayOfMonth(now.lengthOfMonth()).atTime(LocalTime.MAX);
         List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDateBetween(userDTO.getId(), from, to);
 
-        int totalCount = 0;
+        int totalCount = userChallengeList.size();
         int successCount = 0;
         int waitingCount = 0;
         for (UserChallenge userChallenge : userChallengeList) {
-            totalCount++;
             if (userChallenge.getVerificationStatus() == ChallengeStatus.SUCCESS)
                 successCount++;
             else if (userChallenge.getVerificationStatus() == ChallengeStatus.WAITING)
