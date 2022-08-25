@@ -118,7 +118,7 @@ class UserServiceTest extends BaseTest {
             userRegDTO2.setGender(gender);
             userRegDTO2.setBirthDay(birthDay);
             userRegDTO2.setUserRoleType(userRoleType);
-            userRegDTO2.setNickName(nickName);
+            userRegDTO2.setNickName("회원가입_TEST");
             userRegDTO2.setVegannerStage(VegannerStage.BEGINNER);
 
             assertThrows(BizException.class,

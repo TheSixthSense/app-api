@@ -3,6 +3,8 @@ package com.app.api.user.service;
 import com.app.api.core.exception.BizException;
 import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
+import com.app.api.user.dto.UserUpdateDTO;
+import com.app.api.user.dto.UserViewDTO;
 import com.app.api.user.entity.User;
 import com.app.api.user.entity.UserWithdraw;
 import com.app.api.user.enums.UserRoleType;
@@ -86,6 +88,26 @@ public class UserService {
         userRepository.deleteById(userDTO.getId());
 
         // TODO: 회원탈퇴 시 인증글 삭제
+    }
+
+    /**
+     * 회원정보 조회
+     */
+    public UserViewDTO convert(UserDTO userDTO) {
+        return modelMapper.map(userDTO, UserViewDTO.class);
+    }
+
+    /**
+     * 회원정보 수정
+     */
+    @Transactional
+    public UserViewDTO updateUserInfo(UserDTO userDTO, UserUpdateDTO userUpdateDTO) {
+        User user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.user.not.found").build());
+
+        user.updateUserInfo(userUpdateDTO);
+        userRepository.save(user);
+        return modelMapper.map(user, UserViewDTO.class);
     }
 
     /**
