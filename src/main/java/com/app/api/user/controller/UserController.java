@@ -1,5 +1,6 @@
 package com.app.api.user.controller;
 
+import com.app.api.auth.dto.AuthTokenDTO;
 import com.app.api.core.response.RestResponse;
 import com.app.api.user.aop.User;
 import com.app.api.user.dto.UserDTO;
@@ -29,9 +30,10 @@ public class UserController {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "회원가입 실패")
     })
     @PostMapping("/signup")
-    public RestResponse<Object> signup(@Validated @RequestBody UserRegDTO userRegDTO) {
-        userService.signup(userRegDTO);
+    public RestResponse<AuthTokenDTO> signup(@Validated @RequestBody UserRegDTO userRegDTO) {
+        AuthTokenDTO authTokenDTO = userService.signup(userRegDTO);
         return RestResponse
+                .withData(authTokenDTO)
                 .withUserMessageKey("success.user.create")
                 .build();
     }
