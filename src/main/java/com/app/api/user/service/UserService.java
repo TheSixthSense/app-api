@@ -1,5 +1,6 @@
 package com.app.api.user.service;
 
+import com.app.api.challenge.repository.UserChallengeRepository;
 import com.app.api.core.exception.BizException;
 import com.app.api.user.dto.UserDTO;
 import com.app.api.user.dto.UserRegDTO;
@@ -23,6 +24,7 @@ import static com.app.api.common.util.jwt.JwtUtil.getEmailFromAppleSecretToken;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserChallengeRepository userChallengeRepository;
     private final UserWithdrawRepository userWithdrawRepository;
     private final ModelMapper modelMapper;
 
@@ -87,7 +89,8 @@ public class UserService {
         userWithdrawRepository.save(userWithdraw);
         userRepository.deleteById(userDTO.getId());
 
-        // TODO: 회원탈퇴 시 인증글 삭제
+        // 회원탈퇴 시 사용자 챌린지 및 인증 모두 삭제
+        userChallengeRepository.deleteAllByUserIdInQuery(user.getId());
     }
 
     /**
