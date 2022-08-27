@@ -1,7 +1,5 @@
 package com.app.api.user.service;
 
-import com.app.api.auth.dto.AuthLoginDTO;
-import com.app.api.auth.dto.AuthTokenDTO;
 import com.app.api.auth.service.AuthService;
 import com.app.api.core.exception.BizException;
 import com.app.api.user.dto.UserDTO;
@@ -28,14 +26,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserWithdrawRepository userWithdrawRepository;
     private final ModelMapper modelMapper;
-    private final AuthService authService;
 
     /**
      * 회원가입
      * 예외조건 : 기존 email이 존재하는 경우
      */
     @Transactional
-    public AuthTokenDTO signup(UserRegDTO userRegDTO) {
+    public void signup(UserRegDTO userRegDTO) {
         // 권한 입력값이 없을 경우 기본적으로 USER 할당
         if (userRegDTO.getUserRoleType() == null) {
             userRegDTO.setUserRoleType(UserRoleType.USER);
@@ -67,13 +64,6 @@ public class UserService {
                 .vegannerStage(userRegDTO.getVegannerStage())
                 .userRoleType(userRegDTO.getUserRoleType())
                 .build());
-
-        AuthLoginDTO authLoginDTO = AuthLoginDTO.builder()
-                .appleId(userRegDTO.getAppleId())
-                .clientSecret(userRegDTO.getClientSecret())
-                .build();
-
-        return authService.login(authLoginDTO);
     }
 
     /**
