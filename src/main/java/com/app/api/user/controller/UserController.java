@@ -1,5 +1,8 @@
 package com.app.api.user.controller;
 
+import com.app.api.auth.dto.AuthLoginDTO;
+import com.app.api.auth.dto.AuthTokenDTO;
+import com.app.api.auth.service.AuthService;
 import com.app.api.core.response.RestResponse;
 import com.app.api.user.aop.User;
 import com.app.api.user.dto.UserDTO;
@@ -22,6 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @ApiOperation(value = "회원가입")
     @ApiResponses(value = {
@@ -29,9 +33,19 @@ public class UserController {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "회원가입 실패")
     })
     @PostMapping("/signup")
-    public RestResponse<Object> signup(@Validated @RequestBody UserRegDTO userRegDTO) {
+    public RestResponse<AuthTokenDTO> signup(@Validated @RequestBody UserRegDTO userRegDTO) {
+        // 회원가입
         userService.signup(userRegDTO);
+
+        AuthLoginDTO authLoginDTO = AuthLoginDTO.builder()
+                .appleId(userRegDTO.getAppleId())
+                .clientSecret(userRegDTO.getClientSecret())
+                .build();
+
+        // 로그인 처리
+        AuthTokenDTO authTokenDTO = authService.login(authLoginDTO);
         return RestResponse
+                .withData(authTokenDTO)
                 .withUserMessageKey("success.user.create")
                 .build();
     }
