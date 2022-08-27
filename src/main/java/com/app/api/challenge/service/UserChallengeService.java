@@ -1,7 +1,8 @@
 package com.app.api.challenge.service;
 
 import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDto;
+import com.app.api.challenge.dto.UserChallengeVerifyDeleteDto;
+import com.app.api.challenge.dto.UserChallengeVerifyRegDto;
 import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
 import com.app.api.challenge.entity.ChallengeSuccessNotify;
 import com.app.api.challenge.entity.UserChallenge;
@@ -33,13 +34,13 @@ public class UserChallengeService {
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
 
     @Transactional
-    public UserChallengeVerifyResponseDto verifyUserChallenge(UserChallengeVerifyDto userChallengeVerifyDto,
-                                    List<MultipartFile> multipartFileList) {
+    public UserChallengeVerifyResponseDto verifyUserChallenge(UserChallengeVerifyRegDto userChallengeVerifyRegDto,
+                                                              List<MultipartFile> multipartFileList) {
         // 정책상 이미지 업로드는 1개만 가능
         if (multipartFileList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
-        UserChallenge userChallenge = userChallengeRepository.findById(userChallengeVerifyDto.getUserChallengeId())
+        UserChallenge userChallenge = userChallengeRepository.findById(userChallengeVerifyRegDto.getUserChallengeId())
                 .orElseThrow(() -> BizException.withUserMessageKey("exception.user.challenge.not.found").build());
 
         // multipartFileList 확장자 검사
@@ -52,7 +53,7 @@ public class UserChallengeService {
         }
 
         // 이미지 url challenge 에 저장하기
-        userChallenge.updateVerifyInfo(verificationImageList, userChallengeVerifyDto.getMemo());
+        userChallenge.verifyUserChallenge(verificationImageList, userChallengeVerifyRegDto.getMemo());
         userChallengeRepository.save(userChallenge);
 
         // 인증성공 메세지를 랜덤으로 지정
@@ -73,6 +74,15 @@ public class UserChallengeService {
                 .imagePath(challengeSuccessNotify.getImagePath())
                 .message(challengeSuccessNotify.getMessage())
                 .build();
+    }
+
+    @Transactional
+    public void deleteUserChallengeVerify(UserDTO userDTO, UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
+        UserChallenge userChallenge = userChallengeRepository
+                .findByIdAndUserId(userChallengeVerifyDeleteDto.getUserChallengeId(), userDTO.getId())
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.user.challenge.not.found").build());
+
+        userChallenge.deleteVerifyUserChallenge();
     }
 
     /**
