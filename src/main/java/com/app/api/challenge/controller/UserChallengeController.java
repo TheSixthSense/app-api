@@ -35,10 +35,11 @@ public class UserChallengeController {
     })
     @PostMapping(value = "/user/challenge/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public RestResponse<UserChallengeVerifyResponseDto> registerUserChallenge(
+            @ApiIgnore @User UserDTO userDTO,
             @Validated UserChallengeVerifyRegDto userChallengeVerifyRegDto,
             @RequestPart("images")List<MultipartFile> multipartFileList) {
         UserChallengeVerifyResponseDto userChallengeVerifyResponseDto = userChallengeService
-                .verifyUserChallenge(userChallengeVerifyRegDto, multipartFileList);
+                .verifyUserChallenge(userDTO, userChallengeVerifyRegDto, multipartFileList);
 
         return RestResponse
                 .withData(userChallengeVerifyResponseDto)

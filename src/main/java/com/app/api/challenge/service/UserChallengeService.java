@@ -34,13 +34,15 @@ public class UserChallengeService {
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
 
     @Transactional
-    public UserChallengeVerifyResponseDto verifyUserChallenge(UserChallengeVerifyRegDto userChallengeVerifyRegDto,
+    public UserChallengeVerifyResponseDto verifyUserChallenge(UserDTO userDTO,
+                                                              UserChallengeVerifyRegDto userChallengeVerifyRegDto,
                                                               List<MultipartFile> multipartFileList) {
         // 정책상 이미지 업로드는 1개만 가능
         if (multipartFileList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
-        UserChallenge userChallenge = userChallengeRepository.findById(userChallengeVerifyRegDto.getUserChallengeId())
+        UserChallenge userChallenge = userChallengeRepository
+                .findByIdAndUserId(userChallengeVerifyRegDto.getUserChallengeId(), userDTO.getId())
                 .orElseThrow(() -> BizException.withUserMessageKey("exception.user.challenge.not.found").build());
 
         // multipartFileList 확장자 검사
