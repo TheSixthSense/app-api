@@ -1,20 +1,19 @@
 package com.app.api.challenge.service;
 
-import com.app.api.challenge.dto.UserChallengeJoinDto;
+import com.app.api.challenge.dto.*;
 import com.app.api.challenge.entity.UserChallenge;
 import com.app.api.challenge.enums.ChallengeStatus;
 import com.app.api.challenge.repository.UserChallengeRepository;
+import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
 import com.app.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDto;
-import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
 import com.app.api.challenge.entity.ChallengeSuccessNotify;
 import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.core.s3.NaverS3Uploader;
@@ -27,11 +26,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
+    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final UserChallengeRepository userChallengeRepository;
     private final NaverS3Uploader naverS3Uploader;
@@ -126,5 +127,20 @@ public class UserChallengeService {
                 .challengeDate(challengeDate)
                 .verificationStatus(ChallengeStatus.WAITING)
                 .build());
+    }
+
+    public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.user.not.found").build());
+
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
+
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+
+        List<UserChallengeDayListDto> userChallengeDayList = userChallengeList.stream()
+                .map(userChallenge -> modelMapper.map(userChallenge, UserChallengeDayListDto.class))
+                .collect(Collectors.toList());
+
+        return userChallengeDayList;
     }
 }

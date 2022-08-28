@@ -1,9 +1,6 @@
 package com.app.api.challenge.controller;
 
-import com.app.api.challenge.dto.UserChallengeJoinDto;
-import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDto;
-import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
+import com.app.api.challenge.dto.*;
 import com.app.api.challenge.service.UserChallengeService;
 import com.app.api.core.response.RestResponse;
 import com.app.api.user.aop.User;
@@ -14,14 +11,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -75,6 +68,20 @@ public class UserChallengeController {
         userChallengeService.joinChallenge(userChallengeJoinDto, userDTO.getId());
         return RestResponse
                 .withUserMessageKey("success.user.challenge.join.success")
+                .build();
+    }
+
+    @ApiOperation(value = "챌린지 일별 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 일별 조회 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 일별 조회 실패")
+    })
+    @GetMapping("/user/challenge/list")
+    public RestResponse<List<UserChallengeDayListDto>> getChallengeList(@RequestParam(name = "date") String date, @ApiIgnore @User UserDTO userDTO) {
+        List<UserChallengeDayListDto> userChallengeList = userChallengeService.getChallengeListByUserId(date, userDTO.getId());
+        return RestResponse
+                .withData(userChallengeList)
+                .withUserMessageKey("success.user.challenge.list.found")
                 .build();
     }
 
