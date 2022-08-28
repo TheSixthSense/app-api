@@ -31,6 +31,7 @@ public class UserRegDTO {
     private String nickName;
 
     @ApiModelProperty(value = "성별", example = "MALE", required = true)
+    @NotNull
     @ValueOfEnum(enumClass = Gender.class)
     private Gender gender;
 
@@ -40,6 +41,7 @@ public class UserRegDTO {
     private String birthDay;
 
     @ApiModelProperty(value = "비건 실천이력", example = "BEGINNER", required = true)
+    @NotNull
     @ValueOfEnum(enumClass = VegannerStage.class)
     private VegannerStage vegannerStage;
 
