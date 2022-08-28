@@ -65,7 +65,7 @@ public class UserChallengeController {
                 .build();
     }
 
-    @ApiOperation(value = "유저 챌린지 참여")
+    @ApiOperation(value = "챌린지 참여")
     @ApiResponses(value = {
             @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "유저 챌린지 참여 성공"),
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "유저 챌린지 참여 실패")
