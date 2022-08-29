@@ -19,7 +19,7 @@ public class UserChallengeJoinDto {
     @Min(1)
     private long challengeId;
 
-    @ApiModelProperty(value = "챌린지 날짜", example = "2022-08-30T00:00:00", required = true)
-    private LocalDateTime challengeDate;
+    @ApiModelProperty(value = "챌린지 날짜", example = "2022-08-30", required = true)
+    private String challengeDate;
 
 }

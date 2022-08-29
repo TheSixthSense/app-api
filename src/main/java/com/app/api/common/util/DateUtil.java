@@ -20,6 +20,14 @@ public class DateUtil {
     }
 
     /**
+     * String(yyyy-MM-dd) -> LocalDate
+     */
+    public static LocalDate changeStringToLocalDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, formatter);
+    }
+
+    /**
      * String(yyyy-MM-dd) -> LocalDateTime
      */
     public static LocalDateTime changeStringToLocalDateTime(String date) {

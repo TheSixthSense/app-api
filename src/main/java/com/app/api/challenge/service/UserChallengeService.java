@@ -109,13 +109,13 @@ public class UserChallengeService {
     }
 
     public void joinChallenge(UserChallengeJoinDto userChallengeJoinDto, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() ->
-                        BizException.withUserMessageKey("exception.user.not.found").build());
-
         long challengeId = userChallengeJoinDto.getChallengeId();
-        LocalDateTime challengeDate = userChallengeJoinDto.getChallengeDate();
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(userChallengeJoinDto.getChallengeDate());
+        LocalDateTime currentDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
 
+        if (challengeDate.isBefore(currentDate)) {
+            throw BizException.withUserMessageKey("exception.user.challenge.date.invalid").build();
+        }
         userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate)
                 .ifPresent(user -> {
                     throw BizException.withUserMessageKey("exception.user.challenge.join.already").build();
@@ -130,9 +130,6 @@ public class UserChallengeService {
     }
 
     public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> BizException.withUserMessageKey("exception.user.not.found").build());
-
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
         List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
