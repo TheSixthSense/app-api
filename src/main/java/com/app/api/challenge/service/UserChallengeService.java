@@ -7,9 +7,7 @@ import com.app.api.challenge.repository.UserChallengeRepository;
 import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
-import com.app.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,14 +24,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
-    private final ModelMapper modelMapper;
-    private final UserRepository userRepository;
     private final UserChallengeRepository userChallengeRepository;
     private final NaverS3Uploader naverS3Uploader;
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
@@ -111,9 +106,9 @@ public class UserChallengeService {
     public void joinChallenge(UserChallengeJoinDto userChallengeJoinDto, Long userId) {
         long challengeId = userChallengeJoinDto.getChallengeId();
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(userChallengeJoinDto.getChallengeDate());
-        LocalDateTime currentDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
 
-        if (challengeDate.isBefore(currentDate)) {
+        if (challengeDate.isBefore(startOfToday)) {
             throw BizException.withUserMessageKey("exception.user.challenge.date.invalid").build();
         }
         userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate)
@@ -132,12 +127,8 @@ public class UserChallengeService {
     public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
-        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+        List<UserChallengeDayListDto> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
 
-        List<UserChallengeDayListDto> userChallengeDayList = userChallengeList.stream()
-                .map(userChallenge -> modelMapper.map(userChallenge, UserChallengeDayListDto.class))
-                .collect(Collectors.toList());
-
-        return userChallengeDayList;
+        return userChallengeList;
     }
 }

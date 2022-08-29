@@ -1,5 +1,6 @@
 package com.app.api.challenge.repository;
 
+import com.app.api.challenge.dto.UserChallengeDayListDto;
 import com.app.api.challenge.entity.UserChallenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserChallengeRepository extends JpaRepository<UserChallenge, Long> {
+public interface UserChallengeRepository extends JpaRepository<UserChallenge, Long>, UserChallengeRepositoryCustom {
 
     Optional<UserChallenge> findById(Long id);
 
@@ -28,5 +29,4 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge, Lo
 
     Optional<UserChallenge> findByUserIdAndChallengeIdAndChallengeDate(Long userId, Long challengeId, LocalDateTime challengeDate);
 
-    List<UserChallenge> findAllByUserIdAndChallengeDate(Long userId, LocalDateTime challengeDate);
 }
