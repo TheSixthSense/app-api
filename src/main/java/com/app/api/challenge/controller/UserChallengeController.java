@@ -1,8 +1,6 @@
 package com.app.api.challenge.controller;
 
-import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDto;
-import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
+import com.app.api.challenge.dto.*;
 import com.app.api.challenge.service.UserChallengeService;
 import com.app.api.core.response.RestResponse;
 import com.app.api.user.aop.User;
@@ -12,18 +10,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Api(tags = "사용자 챌린지")
+@Api(tags = "유저의 챌린지")
 @RestController
 @RequiredArgsConstructor
 public class UserChallengeController {
@@ -37,7 +33,7 @@ public class UserChallengeController {
     })
     @PostMapping(value = "/user/challenge/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public RestResponse<UserChallengeVerifyResponseDto> registerUserChallenge(@Validated UserChallengeVerifyDto userChallengeVerifyDto,
-                                                      @RequestPart("images")List<MultipartFile> multipartFileList) {
+                                                                              @RequestPart("images") List<MultipartFile> multipartFileList) {
         UserChallengeVerifyResponseDto userChallengeVerifyResponseDto = userChallengeService
                 .verifyUserChallenge(userChallengeVerifyDto, multipartFileList);
 
@@ -61,4 +57,32 @@ public class UserChallengeController {
                 .withUserMessageKey("success.user.challenge.stats")
                 .build();
     }
+
+    @ApiOperation(value = "챌린지 참여")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "Map", response = RestResponse.class, message = "유저 챌린지 참여 성공"),
+            @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "유저 챌린지 참여 실패")
+    })
+    @PostMapping("/challenge/join")
+    public RestResponse<?> joinChallenge(@Validated @RequestBody UserChallengeJoinDto userChallengeJoinDto, @ApiIgnore @User UserDTO userDTO) {
+        userChallengeService.joinChallenge(userChallengeJoinDto, userDTO.getId());
+        return RestResponse
+                .withUserMessageKey("success.user.challenge.join.success")
+                .build();
+    }
+
+    @ApiOperation(value = "챌린지 일별 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 일별 조회 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 일별 조회 실패")
+    })
+    @GetMapping("/user/challenge/list")
+    public RestResponse<List<UserChallengeDayListDto>> getChallengeList(@RequestParam(name = "date") String date, @ApiIgnore @User UserDTO userDTO) {
+        List<UserChallengeDayListDto> userChallengeList = userChallengeService.getChallengeListByUserId(date, userDTO.getId());
+        return RestResponse
+                .withData(userChallengeList)
+                .withUserMessageKey("success.user.challenge.list.found")
+                .build();
+    }
+
 }

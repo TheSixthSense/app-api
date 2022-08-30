@@ -1,25 +1,26 @@
 package com.app.api.challenge.service;
 
-import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDto;
-import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
-import com.app.api.challenge.entity.ChallengeSuccessNotify;
+import com.app.api.challenge.dto.*;
 import com.app.api.challenge.entity.UserChallenge;
 import com.app.api.challenge.enums.ChallengeStatus;
-import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.challenge.repository.UserChallengeRepository;
+import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+import com.app.api.challenge.entity.ChallengeSuccessNotify;
+import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
 import com.app.api.user.dto.UserDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserChallengeService {
 
     @Transactional
     public UserChallengeVerifyResponseDto verifyUserChallenge(UserChallengeVerifyDto userChallengeVerifyDto,
-                                    List<MultipartFile> multipartFileList) {
+                                                              List<MultipartFile> multipartFileList) {
         // 정책상 이미지 업로드는 1개만 가능
         if (multipartFileList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
@@ -100,5 +101,34 @@ public class UserChallengeService {
                 .successCount(successCount)
                 .waitingCount(waitingCount)
                 .build();
+    }
+
+    public void joinChallenge(UserChallengeJoinDto userChallengeJoinDto, Long userId) {
+        long challengeId = userChallengeJoinDto.getChallengeId();
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(userChallengeJoinDto.getChallengeDate());
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+
+        if (challengeDate.isBefore(startOfToday)) {
+            throw BizException.withUserMessageKey("exception.user.challenge.date.invalid").build();
+        }
+        userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate)
+                .ifPresent(user -> {
+                    throw BizException.withUserMessageKey("exception.user.challenge.join.already").build();
+                });
+
+        userChallengeRepository.save(UserChallenge.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .challengeDate(challengeDate)
+                .verificationStatus(ChallengeStatus.WAITING)
+                .build());
+    }
+
+    public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
+
+        List<UserChallengeDayListDto> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+
+        return userChallengeList;
     }
 }
