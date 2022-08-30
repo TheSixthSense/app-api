@@ -56,6 +56,10 @@ public class UserChallenge extends BaseTimeEntity {
         if (verificationImageList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
+        // 챌린지 인증은 당일에만 가능
+        if (!this.challengeDate.toLocalDate().equals(now))
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.date.must.be.today").build();
+
         if (this.challengeDate.isAfter(endOfYesterday))
             this.verificationStatus = ChallengeStatus.SUCCESS;
         else
