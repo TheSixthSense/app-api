@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -49,13 +50,13 @@ public class UserChallenge extends BaseTimeEntity {
 
     public void verifyUserChallenge(List<String> verificationImageList, String memo) throws BizException {
         LocalDate now = LocalDate.now();
-        LocalDateTime todayStartTime = now.atStartOfDay();
+        LocalDateTime endOfYesterday = LocalDateTime.of(now.minusDays(1), LocalTime.of(23, 59, 59));
 
         // 현재 정책상의 이유로 이미지 업로드는 1개만 가능
         if (verificationImageList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
-        if (this.challengeDate.isAfter(todayStartTime))
+        if (this.challengeDate.isAfter(endOfYesterday))
             this.verificationStatus = ChallengeStatus.SUCCESS;
         else
             throw BizException.withUserMessageKey("exception.user.challenge.verify.over.time").build();
@@ -69,9 +70,9 @@ public class UserChallenge extends BaseTimeEntity {
 
     public void deleteVerifyUserChallenge() {
         LocalDate now = LocalDate.now();
-        LocalDateTime todayStartTime = now.atStartOfDay();
+        LocalDateTime endOfYesterday = LocalDateTime.of(now.minusDays(1), LocalTime.of(23, 59, 59));
 
-        if (this.challengeDate.isAfter(todayStartTime))
+        if (this.challengeDate.isAfter(endOfYesterday))
             this.verificationStatus = ChallengeStatus.WAITING;
         else
             this.verificationStatus = ChallengeStatus.FAIL;
