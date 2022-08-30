@@ -71,8 +71,8 @@ public class UserChallengeService {
                 .userChallengeId(userChallenge.getChallengeId())
                 .challengeId(userChallenge.getChallengeId())
                 .challengeDate(userChallenge.getChallengeDate())
-                .imagePath(challengeSuccessNotify.getImagePath())
-                .message(challengeSuccessNotify.getMessage())
+                .titleImage(challengeSuccessNotify.getTitleImage())
+                .contentImage(challengeSuccessNotify.getContentImage())
                 .build();
     }
 
@@ -127,8 +127,6 @@ public class UserChallengeService {
     public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
-        List<UserChallengeDayListDto> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
-
-        return userChallengeList;
+        return userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
     }
 }

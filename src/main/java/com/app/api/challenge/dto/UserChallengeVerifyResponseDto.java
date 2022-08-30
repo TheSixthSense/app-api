@@ -24,9 +24,9 @@ public class UserChallengeVerifyResponseDto {
     @ApiModelProperty(value = "challengeDate", example = "2022-09-01 00:00:00.0")
     private LocalDateTime challengeDate;
 
-    @ApiModelProperty(value = "imagePath", example = "https://")
-    private String imagePath;
+    @ApiModelProperty(value = "titleImage", example = "https://")
+    private String titleImage;
 
-    @ApiModelProperty(value = "message", example = "성공을 축하드립니다. ...")
-    private String message;
+    @ApiModelProperty(value = "contentImage", example = "https://")
+    private String contentImage;
 }
