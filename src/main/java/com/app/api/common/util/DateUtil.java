@@ -28,7 +28,7 @@ public class DateUtil {
     }
 
     /**
-     * String(yyyy-MM-dd) -> LocalDateTime
+     * String(yyyy-MM-dd) -> LocalDateTime(yyyy-MM-ddT00:00:00)
      */
     public static LocalDateTime changeStringToLocalDateTime(String date) {
         LocalDate localDate = LocalDate.parse(date);

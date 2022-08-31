@@ -8,6 +8,7 @@ import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,11 +25,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
+    private final ModelMapper modelMapper;
     private final UserChallengeRepository userChallengeRepository;
     private final NaverS3Uploader naverS3Uploader;
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
@@ -128,5 +131,20 @@ public class UserChallengeService {
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
         return userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+    }
+
+    public List<UserChallengeMonthListDto> getChallengeMonthListByUserId(String date, Long userId) {
+        LocalDate challengeDate = DateUtil.changeStringToLocalDate(date);
+
+        LocalDateTime startDate = challengeDate.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endDate = challengeDate.withDayOfMonth(challengeDate.lengthOfMonth()).atTime(23, 59, 59);
+
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDateBetween(userId, startDate, endDate);
+
+        List<UserChallengeMonthListDto> challengeList = userChallengeList.stream()
+                .map(uc -> modelMapper.map(uc, UserChallengeMonthListDto.class))
+                .collect(Collectors.toList());
+
+        return challengeList;
     }
 }

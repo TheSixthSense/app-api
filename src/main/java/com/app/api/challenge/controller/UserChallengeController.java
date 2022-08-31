@@ -85,4 +85,17 @@ public class UserChallengeController {
                 .build();
     }
 
+    @ApiOperation(value = "챌린지 월별 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 월별 조회 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 월별 조회 실패")
+    })
+    @GetMapping("/user/challenge/month/list")
+    public RestResponse<List<UserChallengeMonthListDto>> getChallengeMonthList(@RequestParam(name = "date") String date, @ApiIgnore @User UserDTO userDTO) {
+        List<UserChallengeMonthListDto> userChallengeList = userChallengeService.getChallengeMonthListByUserId(date, userDTO.getId());
+        return RestResponse
+                .withData(userChallengeList)
+                .withUserMessageKey("success.user.challenge.month.list.found")
+                .build();
+    }
 }
