@@ -50,20 +50,16 @@ public class UserChallenge extends BaseTimeEntity {
 
     public void verifyUserChallenge(List<String> verificationImageList, String memo) throws BizException {
         LocalDate now = LocalDate.now();
-        LocalDateTime endOfYesterday = LocalDateTime.of(now.minusDays(1), LocalTime.of(23, 59, 59));
 
         // 현재 정책상의 이유로 이미지 업로드는 1개만 가능
         if (verificationImageList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
         // 챌린지 인증은 당일에만 가능
-        if (!this.challengeDate.toLocalDate().equals(now))
-            throw BizException.withUserMessageKey("exception.user.challenge.verify.date.must.be.today").build();
-
-        if (this.challengeDate.isAfter(endOfYesterday))
+        if (this.challengeDate.toLocalDate().equals(now))
             this.verificationStatus = ChallengeStatus.SUCCESS;
         else
-            throw BizException.withUserMessageKey("exception.user.challenge.verify.over.time").build();
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.date.must.be.today").build();
 
         for (String imagePath : verificationImageList) {
             this.verificationImage = imagePath;
