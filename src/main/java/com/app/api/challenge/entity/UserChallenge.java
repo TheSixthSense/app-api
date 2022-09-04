@@ -59,7 +59,7 @@ public class UserChallenge extends BaseTimeEntity {
         if (this.challengeDate.toLocalDate().equals(now))
             this.verificationStatus = ChallengeStatus.SUCCESS;
         else
-            throw BizException.withUserMessageKey("exception.user.challenge.verify.date.must.be.today").build();
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.must.be.today").build();
 
         for (String imagePath : verificationImageList) {
             this.verificationImage = imagePath;
@@ -70,10 +70,12 @@ public class UserChallenge extends BaseTimeEntity {
 
     public void deleteVerifyUserChallenge() {
         LocalDate now = LocalDate.now();
-        LocalDateTime endOfYesterday = LocalDateTime.of(now.minusDays(1), LocalTime.of(23, 59, 59));
+        LocalDateTime endOfToday = LocalDateTime.of(now, LocalTime.of(23,59,59));
 
-        if (this.challengeDate.isAfter(endOfYesterday))
+        if (this.challengeDate.toLocalDate().equals(now))
             this.verificationStatus = ChallengeStatus.WAITING;
+        else if (this.challengeDate.isAfter(endOfToday))
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.delete.must.be.before.today").build();
         else
             this.verificationStatus = ChallengeStatus.FAIL;
 
