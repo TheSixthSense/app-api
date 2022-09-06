@@ -36,6 +36,15 @@ public class DateUtil {
     }
 
     /**
+     * LocalDateTime(yyyy-MM-ddT00:00:00) -> String(yyyy-MM-dd)
+     */
+    public static String changeLocalDateTimeToString(LocalDateTime date) {
+        LocalDate localDate = LocalDate.from(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
+    }
+
+    /**
      * String(yyyy-MM-dd HH:mm:ss) -> LocalDateTime
      */
     public static LocalDateTime changeFullStringToLocalDateTime(String date) {
