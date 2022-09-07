@@ -8,6 +8,7 @@ import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,17 +19,20 @@ import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
 import com.app.api.user.dto.UserDTO;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
+    private final ModelMapper modelMapper;
     private final UserChallengeRepository userChallengeRepository;
     private final NaverS3Uploader naverS3Uploader;
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
@@ -128,5 +132,41 @@ public class UserChallengeService {
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
         return userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+    }
+
+    public List<UserChallengeMonthListDto> getChallengeMonthListByUserId(String date, Long userId) {
+        // 현재 날짜로 월초~월말 구하기
+        LocalDate challengeDate = DateUtil.changeStringToLocalDate(date);
+        LocalDateTime startDate = challengeDate.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endDate = challengeDate.withDayOfMonth(challengeDate.lengthOfMonth()).atTime(23, 59, 59);
+
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDateBetween(userId, startDate, endDate);
+
+        // 챌린지 목록 날짜별로 분리
+        Map<String, List<UserChallenge>> userChallengeMap = userChallengeList.stream()
+                .collect(Collectors.groupingBy(uc -> DateUtil.changeLocalDateTimeToString(uc.getChallengeDate())));
+
+        List<UserChallengeMonthListDto> responseDtoList = new ArrayList<>();
+
+        // 챌린지 성공 횟수 count
+        userChallengeMap.forEach((key, value) -> {
+            int successCount = 0;
+            int totalCount = value.size();
+
+            for (UserChallenge uc : value) {
+                if (uc.getVerificationStatus() == ChallengeStatus.SUCCESS) {
+                    successCount++;
+
+                }
+            }
+
+            responseDtoList.add(UserChallengeMonthListDto.builder()
+                    .date(key)
+                    .success_count(successCount)
+                    .total_count(totalCount)
+                    .build());
+        });
+
+        return responseDtoList;
     }
 }
