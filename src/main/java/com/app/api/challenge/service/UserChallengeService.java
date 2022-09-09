@@ -1,44 +1,38 @@
 package com.app.api.challenge.service;
 
-import com.app.api.challenge.dto.UserChallengeStatsDto;
-import com.app.api.challenge.dto.UserChallengeVerifyDeleteDto;
-import com.app.api.challenge.dto.UserChallengeVerifyRegDto;
-import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
-import com.app.api.challenge.entity.ChallengeSuccessNotify;
 import com.app.api.challenge.dto.*;
+import com.app.api.challenge.entity.ChallengeSuccessNotify;
 import com.app.api.challenge.entity.UserChallenge;
+import com.app.api.challenge.entity.UserChallengeBatch;
 import com.app.api.challenge.enums.ChallengeStatus;
+import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
+import com.app.api.challenge.repository.UserChallengeBatchRepository;
 import com.app.api.challenge.repository.UserChallengeRepository;
 import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-
-import com.app.api.challenge.entity.ChallengeSuccessNotify;
-import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
 import com.app.api.user.dto.UserDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
-    private final ModelMapper modelMapper;
     private final UserChallengeRepository userChallengeRepository;
+    private final UserChallengeBatchRepository userChallengeBatchRepository;
     private final NaverS3Uploader naverS3Uploader;
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
 
@@ -148,6 +142,29 @@ public class UserChallengeService {
         LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
 
         return userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+    }
+
+    public void startUserChallengeVerifyBatch(LocalDateTime batchTime) {
+        LocalDateTime batchStartOfDay = batchTime.toLocalDate().atStartOfDay();
+        LocalDateTime batchEndOfDay = batchTime.toLocalDate().atTime(23,59,59,999_999_999);
+        List<UserChallenge> allByChallengeDateBetween = userChallengeRepository
+                .findAllByVerificationStatusAndChallengeDateBetween(ChallengeStatus.WAITING ,batchStartOfDay, batchEndOfDay);
+
+        for (UserChallenge userChallenge : allByChallengeDateBetween) {
+            UserChallengeBatch userChallengeBatch = userChallengeBatchRepository.findByUserChallengeId(userChallenge.getId())
+                    .orElseGet(() ->
+                            userChallengeBatchRepository.save(
+                                    UserChallengeBatch.builder()
+                                            .userChallengeId(userChallenge.getId())
+                                            .build())
+                    );
+            if (userChallengeBatch.getExecutedDate() == null) {
+                userChallenge.verifyFail();
+                userChallengeBatch.executeBatch();
+                userChallengeRepository.save(userChallenge);
+                userChallengeBatchRepository.save(userChallengeBatch);
+            }
+        }
     }
 
     public List<UserChallengeMonthListDto> getChallengeMonthListByUserId(String date, Long userId) {
