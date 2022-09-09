@@ -10,7 +10,7 @@ public class FileUtil {
 
     public static boolean isPermissionFileExt(String fileName) {
 
-        final String[] PERMISSION_FILE_EXT_ARR = {"JPG"};
+        final String[] PERMISSION_FILE_EXT_ARR = {"JPG, JPEG"};
 
         if( !StringUtils.hasText(fileName) ) {
             return false;
