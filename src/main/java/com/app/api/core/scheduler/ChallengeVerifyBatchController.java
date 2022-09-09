@@ -21,7 +21,7 @@ public class ChallengeVerifyBatchController {
         log.info("------------ challenge verify batch start -----------------");
         log.info("------------ time : " + start +  " -----------------");
 
-        userChallengeService.startUserChallengeVerifyBatch(start);
+        userChallengeService.startUserChallengeVerifyBatch(start.minusDays(1));
 
         LocalDateTime end = LocalDateTime.now();
         log.info("------------ challenge verify batch end -----------------");
