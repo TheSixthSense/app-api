@@ -51,7 +51,7 @@ public class UserService {
         checkDuplicateNickname(userRegDTO.getNickName());
 
         // 기존 회원가입 여부 확인 - email을 기준
-        userRepository.findByEmail(email).ifPresent(user -> {
+        userRepository.findByAppleIdAndEmail(userRegDTO.getAppleId(), email).ifPresent(user -> {
             throw BizException.withUserMessageKey("exception.user.already.exist").build();
         });
 
