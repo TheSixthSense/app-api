@@ -5,30 +5,39 @@ import com.app.api.challenge.dto.UserChallengeVerifyDeleteDto;
 import com.app.api.challenge.dto.UserChallengeVerifyRegDto;
 import com.app.api.challenge.dto.UserChallengeVerifyResponseDto;
 import com.app.api.challenge.entity.ChallengeSuccessNotify;
+import com.app.api.challenge.dto.*;
 import com.app.api.challenge.entity.UserChallenge;
 import com.app.api.challenge.enums.ChallengeStatus;
-import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.challenge.repository.UserChallengeRepository;
+import com.app.api.common.util.DateUtil;
 import com.app.api.common.util.file.FileUtil;
 import com.app.api.core.exception.BizException;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+import com.app.api.challenge.entity.ChallengeSuccessNotify;
+import com.app.api.challenge.repository.ChallengeSuccessNotifyRepository;
 import com.app.api.core.s3.NaverS3Uploader;
 import com.app.api.core.s3.S3Folder;
 import com.app.api.user.dto.UserDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserChallengeService {
 
+    private final ModelMapper modelMapper;
     private final UserChallengeRepository userChallengeRepository;
     private final NaverS3Uploader naverS3Uploader;
     private final ChallengeSuccessNotifyRepository challengeSuccessNotifyRepository;
@@ -73,8 +82,8 @@ public class UserChallengeService {
                 .userChallengeId(userChallenge.getChallengeId())
                 .challengeId(userChallenge.getChallengeId())
                 .challengeDate(userChallenge.getChallengeDate())
-                .imagePath(challengeSuccessNotify.getImagePath())
-                .message(challengeSuccessNotify.getMessage())
+                .titleImage(challengeSuccessNotify.getTitleImage())
+                .contentImage(challengeSuccessNotify.getContentImage())
                 .build();
     }
 
@@ -112,5 +121,68 @@ public class UserChallengeService {
                 .successCount(successCount)
                 .waitingCount(waitingCount)
                 .build();
+    }
+
+    public void joinChallenge(UserChallengeJoinDto userChallengeJoinDto, Long userId) {
+        long challengeId = userChallengeJoinDto.getChallengeId();
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(userChallengeJoinDto.getChallengeDate());
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+
+        if (challengeDate.isBefore(startOfToday)) {
+            throw BizException.withUserMessageKey("exception.user.challenge.date.invalid").build();
+        }
+        userChallengeRepository.findByUserIdAndChallengeIdAndChallengeDate(userId, challengeId, challengeDate)
+                .ifPresent(user -> {
+                    throw BizException.withUserMessageKey("exception.user.challenge.join.already").build();
+                });
+
+        userChallengeRepository.save(UserChallenge.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .challengeDate(challengeDate)
+                .verificationStatus(ChallengeStatus.WAITING)
+                .build());
+    }
+
+    public List<UserChallengeDayListDto> getChallengeListByUserId(String date, Long userId) {
+        LocalDateTime challengeDate = DateUtil.changeStringToLocalDateTime(date);
+
+        return userChallengeRepository.findAllByUserIdAndChallengeDate(userId, challengeDate);
+    }
+
+    public List<UserChallengeMonthListDto> getChallengeMonthListByUserId(String date, Long userId) {
+        // 현재 날짜로 월초~월말 구하기
+        LocalDate challengeDate = DateUtil.changeStringToLocalDate(date);
+        LocalDateTime startDate = challengeDate.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endDate = challengeDate.withDayOfMonth(challengeDate.lengthOfMonth()).atTime(23, 59, 59);
+
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByUserIdAndChallengeDateBetween(userId, startDate, endDate);
+
+        // 챌린지 목록 날짜별로 분리
+        Map<String, List<UserChallenge>> userChallengeMap = userChallengeList.stream()
+                .collect(Collectors.groupingBy(uc -> DateUtil.changeLocalDateTimeToString(uc.getChallengeDate())));
+
+        List<UserChallengeMonthListDto> responseDtoList = new ArrayList<>();
+
+        // 챌린지 성공 횟수 count
+        userChallengeMap.forEach((key, value) -> {
+            int successCount = 0;
+            int totalCount = value.size();
+
+            for (UserChallenge uc : value) {
+                if (uc.getVerificationStatus() == ChallengeStatus.SUCCESS) {
+                    successCount++;
+
+                }
+            }
+
+            responseDtoList.add(UserChallengeMonthListDto.builder()
+                    .date(key)
+                    .success_count(successCount)
+                    .total_count(totalCount)
+                    .build());
+        });
+
+        return responseDtoList;
     }
 }

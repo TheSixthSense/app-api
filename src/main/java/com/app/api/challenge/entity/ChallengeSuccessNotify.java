@@ -24,8 +24,8 @@ public class ChallengeSuccessNotify extends BaseTimeEntity {
     private Long challengeId;
 
     @Column
-    private String imagePath;
+    private String titleImage;
 
-    @Column(nullable = false)
-    private String message;
+    @Column
+    private String contentImage;
 }

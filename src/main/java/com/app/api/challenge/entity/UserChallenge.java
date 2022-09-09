@@ -42,7 +42,7 @@ public class UserChallenge extends BaseTimeEntity {
     @Column
     private LocalDateTime verificationDate;
 
-    @Column(length = 100)
+    @Column(length = 200)
     private String verificationMemo;
 
     @Column
