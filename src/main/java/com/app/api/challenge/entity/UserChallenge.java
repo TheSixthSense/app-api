@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -46,16 +48,39 @@ public class UserChallenge extends BaseTimeEntity {
     @Column
     private String verificationImage;
 
-    public void updateVerifyInfo(List<String> verificationImageList, String memo) throws BizException {
+    public void verifyUserChallenge(List<String> verificationImageList, String memo) throws BizException {
+        LocalDate now = LocalDate.now();
+
         // 현재 정책상의 이유로 이미지 업로드는 1개만 가능
         if (verificationImageList.size() != 1)
             throw BizException.withUserMessageKey("exception.user.challenge.verify.image.count").build();
 
+        // 챌린지 인증은 당일에만 가능
+        if (this.challengeDate.toLocalDate().equals(now))
+            this.verificationStatus = ChallengeStatus.SUCCESS;
+        else
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.must.be.today").build();
+
         for (String imagePath : verificationImageList) {
             this.verificationImage = imagePath;
         }
-        this.verificationStatus = ChallengeStatus.SUCCESS;
+
         this.verificationMemo = memo;
+    }
+
+    public void deleteVerifyUserChallenge() {
+        LocalDate now = LocalDate.now();
+        LocalDateTime endOfToday = LocalDateTime.of(now, LocalTime.of(23,59,59));
+
+        if (this.challengeDate.toLocalDate().equals(now))
+            this.verificationStatus = ChallengeStatus.WAITING;
+        else if (this.challengeDate.isAfter(endOfToday))
+            throw BizException.withUserMessageKey("exception.user.challenge.verify.delete.must.be.before.today").build();
+        else
+            this.verificationStatus = ChallengeStatus.FAIL;
+
+        this.verificationImage = null;
+        this.verificationMemo = null;
     }
 
 }
