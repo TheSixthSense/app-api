@@ -17,7 +17,6 @@ import com.app.api.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -39,7 +38,7 @@ public class UserChallengeService {
 
     @Transactional
     public UserChallengeVerifyResponseDto verifyUserChallenge(UserDTO userDTO,
-                                                              @Validated UserChallengeVerifyRegDto userChallengeVerifyRegDto,
+                                                              UserChallengeVerifyRegDto userChallengeVerifyRegDto,
                                                               List<MultipartFile> multipartFileList) {
         // 정책상 이미지 업로드는 1개만 가능
         if (multipartFileList.size() != 1)
