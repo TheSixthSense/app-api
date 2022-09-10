@@ -66,6 +66,7 @@ public class UserChallenge extends BaseTimeEntity {
         }
 
         this.verificationMemo = memo;
+        this.verificationDate = LocalDateTime.now();
     }
 
     public void deleteVerifyUserChallenge() {
