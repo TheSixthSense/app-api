@@ -103,7 +103,7 @@ class UserServiceTest extends BaseTest {
                         userService.signup(userRegDTO);
                         userService.signup(userRegDTO2);
                     },
-                    messageComponent.getMessage("exception.user.already.exist"));
+                    messageComponent.getMessage("exception.user.email.already.exist"));
         }
 
         @Test()
