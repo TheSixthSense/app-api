@@ -85,4 +85,19 @@ public class UserChallengeController {
                 .build();
     }
 
+    @ApiOperation(value = "챌린지 일별 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 삭제 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 삭제 실패")
+    })
+    @GetMapping("/user/challenge")
+    public RestResponse<Object> deleteChallengeList(@Validated UserChallengeDeleteDto userChallengeDeleteDto,
+                                                    @ApiIgnore @User UserDTO userDTO) {
+        userChallengeService.deleteUserChallenge(userChallengeDeleteDto, userDTO);
+
+        return RestResponse
+                .withUserMessageKey("success.user.challenge.delete")
+                .build();
+    }
+
 }
