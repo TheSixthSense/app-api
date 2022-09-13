@@ -10,12 +10,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
-
-import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -32,14 +31,30 @@ public class UserChallengeController {
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증 실패")
     })
     @PostMapping(value = "/user/challenge/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public RestResponse<UserChallengeVerifyResponseDto> registerUserChallenge(@Validated UserChallengeVerifyDto userChallengeVerifyDto,
-                                                                              @RequestPart("images") List<MultipartFile> multipartFileList) {
+    public RestResponse<UserChallengeVerifyResponseDto> registerUserChallenge(
+            @ApiIgnore @User UserDTO userDTO,
+            @Validated UserChallengeVerifyRegDto userChallengeVerifyRegDto,
+            @RequestPart("images")List<MultipartFile> multipartFileList) {
         UserChallengeVerifyResponseDto userChallengeVerifyResponseDto = userChallengeService
-                .verifyUserChallenge(userChallengeVerifyDto, multipartFileList);
+                .verifyUserChallenge(userDTO, userChallengeVerifyRegDto, multipartFileList);
 
         return RestResponse
                 .withData(userChallengeVerifyResponseDto)
-                .withUserMessageKey("success.user.challenge.register")
+                .withUserMessageKey("success.user.challenge.verify.register")
+                .build();
+    }
+
+    @ApiOperation(value = "챌린지 인증내역 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증내역 삭제 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증내역 삭제 실패")
+    })
+    @DeleteMapping(value = "/user/challenge/verify")
+    public RestResponse<Object> getUserChallenge(@ApiIgnore @User UserDTO userDTO,
+                                                 @Validated UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
+        userChallengeService.deleteUserChallengeVerify(userDTO, userChallengeVerifyDeleteDto);
+        return RestResponse
+                .withUserMessageKey("success.user.challenge.verify.delete")
                 .build();
     }
 
@@ -85,4 +100,17 @@ public class UserChallengeController {
                 .build();
     }
 
+    @ApiOperation(value = "챌린지 월별 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 월별 조회 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 월별 조회 실패")
+    })
+    @GetMapping("/user/challenge/month/list")
+    public RestResponse<List<UserChallengeMonthListDto>> getChallengeMonthList(@RequestParam(name = "date") String date, @ApiIgnore @User UserDTO userDTO) {
+        List<UserChallengeMonthListDto> userChallengeList = userChallengeService.getChallengeMonthListByUserId(date, userDTO.getId());
+        return RestResponse
+                .withData(userChallengeList)
+                .withUserMessageKey("success.user.challenge.month.list.found")
+                .build();
+    }
 }

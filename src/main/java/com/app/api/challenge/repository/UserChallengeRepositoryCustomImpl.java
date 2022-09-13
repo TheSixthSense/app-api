@@ -20,11 +20,15 @@ public class UserChallengeRepositoryCustomImpl implements UserChallengeRepositor
     public List<UserChallengeDayListDto> findAllByUserIdAndChallengeDate(Long userId, LocalDateTime challengeDate) {
         return queryFactory.select(new QUserChallengeDayListDto(
                 userChallenge.id,
+                userChallenge.userId,
                 userChallenge.challengeId,
+                userChallenge.challengeDate,
                 challenge.name,
                 challenge.emoji,
-                userChallenge.challengeDate,
-                userChallenge.verificationStatus
+                userChallenge.verificationStatus,
+                userChallenge.verificationDate,
+                userChallenge.verificationMemo,
+                userChallenge.verificationImage
         )).from(userChallenge)
                 .innerJoin(challenge).on(userChallenge.challengeId.eq(challenge.id))
                 .where(userChallenge.userId.eq(userId),

@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserChallengeVerifyDto {
+public class UserChallengeVerifyRegDto {
 
     @ApiModelProperty(value = "userChallengeId", example = "1")
     @NotNull

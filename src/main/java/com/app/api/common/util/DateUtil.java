@@ -28,11 +28,20 @@ public class DateUtil {
     }
 
     /**
-     * String(yyyy-MM-dd) -> LocalDateTime
+     * String(yyyy-MM-dd) -> LocalDateTime(yyyy-MM-ddT00:00:00)
      */
     public static LocalDateTime changeStringToLocalDateTime(String date) {
         LocalDate localDate = LocalDate.parse(date);
         return localDate.atStartOfDay();
+    }
+
+    /**
+     * LocalDateTime(yyyy-MM-ddT00:00:00) -> String(yyyy-MM-dd)
+     */
+    public static String changeLocalDateTimeToString(LocalDateTime date) {
+        LocalDate localDate = LocalDate.from(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
     }
 
     /**

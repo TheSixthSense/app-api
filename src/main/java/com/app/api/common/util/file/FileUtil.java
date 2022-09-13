@@ -10,7 +10,7 @@ public class FileUtil {
 
     public static boolean isPermissionFileExt(String fileName) {
 
-        final String[] PERMISSION_FILE_EXT_ARR = {"JPG"};
+        final String[] PERMISSION_FILE_EXT_ARR = {"JPG", "JPEG"};
 
         if( !StringUtils.hasText(fileName) ) {
             return false;
@@ -40,6 +40,8 @@ public class FileUtil {
     public static void checkPermissionImageExt(List<MultipartFile> multipartFileList) {
         for (MultipartFile multipartFile : multipartFileList) {
             boolean permissionFileExt = FileUtil.isPermissionFileExt(multipartFile.getOriginalFilename());
+            System.out.println(multipartFile.getOriginalFilename());
+            System.out.println(permissionFileExt);
             if (!permissionFileExt) throw BizException.withUserMessageKey("exception.common.file.extension.not.allow").build();
         }
     }
