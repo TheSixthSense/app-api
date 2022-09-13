@@ -82,6 +82,7 @@ public class UserChallenge extends BaseTimeEntity {
 
         this.verificationImage = null;
         this.verificationMemo = null;
+        this.verificationDate = null;
     }
 
     public void verifyFail() {
