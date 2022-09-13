@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "Auth")
 @RestController
@@ -46,7 +47,7 @@ public class AuthController {
             @ApiResponse(code = 400, responseContainer = "Map", response = RestResponse.class, message = "로그아웃 실패")
     })
     @PostMapping("/auth/logout")
-    public RestResponse<Object> logout(@User UserDTO userDTO) {
+    public RestResponse<Object> logout(@ApiIgnore @User UserDTO userDTO) {
         authService.logout(userDTO);
 
         return RestResponse

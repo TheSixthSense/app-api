@@ -1,6 +1,7 @@
 package com.app.api.challenge.repository;
 
 import com.app.api.challenge.entity.UserChallenge;
+import com.app.api.challenge.enums.ChallengeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,8 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge, Lo
     Optional<UserChallenge> findById(Long id);
 
     Optional<UserChallenge> findByIdAndUserId(Long id, Long userId);
+
+    List<UserChallenge> findAllByVerificationStatusAndChallengeDateBetween(ChallengeStatus status, LocalDateTime from, LocalDateTime to);
 
     List<UserChallenge> findAllByUserIdAndChallengeDateBetween(Long userId, LocalDateTime from, LocalDateTime to);
 
