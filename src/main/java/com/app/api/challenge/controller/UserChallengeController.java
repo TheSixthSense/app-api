@@ -50,8 +50,8 @@ public class UserChallengeController {
             @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "챌린지 인증내역 삭제 실패")
     })
     @DeleteMapping(value = "/user/challenge/verify")
-    public RestResponse<Object> getUserChallenge(@ApiIgnore @User UserDTO userDTO,
-                                                 @Validated UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
+    public RestResponse<Object> deleteUserChallenge(@ApiIgnore @User UserDTO userDTO,
+                                                    @Validated UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
         userChallengeService.deleteUserChallengeVerify(userDTO, userChallengeVerifyDeleteDto);
         return RestResponse
                 .withUserMessageKey("success.user.challenge.verify.delete")
@@ -113,4 +113,20 @@ public class UserChallengeController {
                 .withUserMessageKey("success.user.challenge.month.list.found")
                 .build();
     }
+
+    @ApiOperation(value = "챌린지 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 삭제 성공"),
+            @ApiResponse(code = 400, responseContainer = "List", response = RestResponse.class, message = "유저 챌린지 삭제 실패")
+    })
+    @DeleteMapping("/user/challenge")
+    public RestResponse<Object> deleteChallengeList(@Validated UserChallengeDeleteDto userChallengeDeleteDto,
+                                                    @ApiIgnore @User UserDTO userDTO) {
+        userChallengeService.deleteUserChallenge(userChallengeDeleteDto, userDTO);
+
+        return RestResponse
+                .withUserMessageKey("success.user.challenge.delete")
+                .build();
+    }
+
 }
