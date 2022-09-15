@@ -202,4 +202,13 @@ public class UserChallengeService {
 
         return responseDtoList;
     }
+
+    @Transactional
+    public void deleteUserChallenge(UserChallengeDeleteDto userChallengeDeleteDto, UserDTO userDTO) {
+        UserChallenge userChallenge = userChallengeRepository
+                .findByIdAndUserId(userChallengeDeleteDto.getUserChallengeId(), userDTO.getId())
+                .orElseThrow(() -> BizException.withUserMessageKey("exception.user.challenge.not.found").build());
+
+        userChallengeRepository.deleteById(userChallenge.getId());
+    }
 }

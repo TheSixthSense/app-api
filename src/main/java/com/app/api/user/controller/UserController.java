@@ -97,7 +97,7 @@ public class UserController {
     })
     @PatchMapping("/user/info")
     public RestResponse<UserViewDTO> updateUserInfo(@ApiIgnore @User UserDTO userDTO,
-                                               @Validated UserUpdateDTO userUpdateDTO) {
+                                                    @Validated @RequestBody UserUpdateDTO userUpdateDTO) {
         UserViewDTO userViewDTO = userService.updateUserInfo(userDTO, userUpdateDTO);
         return RestResponse
                 .withData(userViewDTO)
