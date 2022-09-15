@@ -51,7 +51,7 @@ public class UserChallengeController {
     })
     @DeleteMapping(value = "/user/challenge/verify")
     public RestResponse<Object> getUserChallenge(@ApiIgnore @User UserDTO userDTO,
-                                                 @Validated UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
+                                                 @Validated @RequestBody UserChallengeVerifyDeleteDto userChallengeVerifyDeleteDto) {
         userChallengeService.deleteUserChallengeVerify(userDTO, userChallengeVerifyDeleteDto);
         return RestResponse
                 .withUserMessageKey("success.user.challenge.verify.delete")
