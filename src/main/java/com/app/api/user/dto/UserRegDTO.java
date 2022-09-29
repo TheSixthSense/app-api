@@ -36,7 +36,6 @@ public class UserRegDTO {
     private Gender gender;
 
     @ApiModelProperty(value = "생년월일", example = "19920910", required = true)
-    @NotEmpty
     @Pattern(regexp = "\\d{8}")
     private String birthDay;
 
