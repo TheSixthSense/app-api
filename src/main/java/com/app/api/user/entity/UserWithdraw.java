@@ -30,7 +30,7 @@ public class UserWithdraw extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column
     private String birthDay;
 
     @Column(nullable = false)
